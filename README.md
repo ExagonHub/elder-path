@@ -18,7 +18,7 @@ A terminal-based RPG set in a dark and unforgiving world. Choose your path, figh
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/elder-path.git
+git clone https://github.com/ExagonHub/elder-path.git
 cd elder-path
 pip install -r requirements.txt
 ```

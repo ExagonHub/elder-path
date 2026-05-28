@@ -1,0 +1,15 @@
+{
+    "ENEMY_001": {
+        "name": "Wolf",
+        "hp": 50,
+        "base_damage": 8,
+        "xp": 15 
+    },
+
+    "ENEMY_002": {
+        "name": "Goblin",
+        "hp": 70,
+        "base_damage": 12,
+        "xp": 20
+    }
+}
