@@ -4,6 +4,28 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 29 May 2026
+
+### v0.2 completed
+
+- `warrior_attack()`, `assassin_attack()`, `mage_attack()` functions added to `combat.py`.
+- Each class now has a combat submenu inside the Attack action.
+- Warrior stances: Normal (standard damage), Defensive (0.5x damage + damage reduction), Counter (50% chance 1.5x damage, 50% miss).
+- Assassin attack types: Normal, Rapid (2x hits at 0.5x damage each), Piercing (50% chance 1.5x, 50% miss).
+- Mage spells: Fireball (50% chance 1.5x damage), Frost (normal damage + 50% stun chance), Lightning (guaranteed normal damage).
+- Defend action added — sets `is_defending = True`, halves enemy damage for that turn.
+- Dodge action added — DEX * 5% success chance, avoids enemy attack entirely on success.
+- Enemy flee mechanic added — enemy flees when HP drops below 20% of max HP. `max_hp` stored at combat start.
+- `stunned`, `is_defending`, `dodged` state variables managed per turn in `start_combat`.
+
+### Decisions made
+- Rapid attack deals `damage // 2` per hit, applied as `damage * 2` total — keeps formula clean.
+- Frost stun is handled in `start_combat` via `stunned` flag, not inside `mage_attack`.
+- Enemy flee deferred for elite/boss — will be addressed in v0.8.
+- Dodge chance scales with DEX to reward stat investment.
+
+---
+
 ## 28 May 2026
 
 ### v0.1 completed

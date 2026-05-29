@@ -33,20 +33,32 @@ python main.py
 
 ```
 elder-path/
-├── main.py          # Entry point
-├── requirements.txt # Dependencies
-├── ROADMAP.md       # Development roadmap
-├── CHANGELOG.md     # Version history
-└── README.md        # This file
+├── main.py              # Entry point
+├── requirements.txt     # Dependencies
+├── README.md            # This file
+├── ROADMAP.md           # Development roadmap
+├── CHANGELOG.md         # Version history
+├── DEVLOG.md            # Development diary
+├── .gitignore
+├── data/
+│   ├── classes.json     # Class definitions and starting stats
+│   └── enemies.json     # Enemy pool and stats
+└── game/
+    ├── __init__.py
+    ├── character.py     # Character creation and level up
+    └── combat.py        # Combat loop and class-specific mechanics
 ```
 
 ## Development Status
 
-| Version | Focus              | Status      |
-|---------|--------------------|-------------|
-| v0.1    | Core loop          | 🔧 In progress |
-| v0.2    | Combat system      | ⏳ Pending  |
-| v0.3+   | Items, world, NPCs | ⏳ Pending  |
+| Version | Focus | Status |
+|---------|-------|--------|
+| v0.1 | Core loop | ✅ Complete |
+| v0.2 | Combat system | ✅ Complete |
+| v0.3 | Items and inventory | ⏳ Pending |
+| v0.4 | Equipment system | ⏳ Pending |
+| v0.5+ | World, NPCs, bosses... | ⏳ Pending |
+| v1.0 | Playtest, balance, polish | ⏳ Pending |
 
 ---
 
