@@ -3,13 +3,19 @@
         "name": "Wolf",
         "hp": 50,
         "base_damage": 8,
-        "xp": 15 
+        "xp": 15,
+        "drop": "LOOT_001" ,
+        "gold_min": 10,
+        "gold_max": 20
     },
 
     "ENEMY_002": {
         "name": "Goblin",
         "hp": 70,
         "base_damage": 12,
-        "xp": 20
+        "xp": 20,
+        "drop": "LOOT_002",
+        "gold_min": 20,
+        "gold_max": 35
     }
 }

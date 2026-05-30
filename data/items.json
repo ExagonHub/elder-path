@@ -1,0 +1,24 @@
+{
+    "POTION_001": {
+        "name": "Health Potion",
+        "type": "consumable",
+        "effect": "heal",
+        "value": 50,
+        "price": 150,
+        "quality": "common"
+    },
+
+    "LOOT_001": {
+        "name": "Wolf Fang",
+        "type": "loot",
+        "price": 50,
+        "quality": "common"
+    },
+
+    "LOOT_002": {
+        "name": "Goblin eye",
+        "type": "loot",
+        "price": 70,
+        "quality": "common"
+    }
+}

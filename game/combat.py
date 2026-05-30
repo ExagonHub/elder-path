@@ -1,5 +1,7 @@
 import random
 from game.character import level_up
+from game.items import enemy_drop
+from game.items import item_action
 
 def start_combat(player, enemy):
     print(f"You encountered a {enemy["name"]}")
@@ -15,10 +17,11 @@ def start_combat(player, enemy):
         print("1 - Attack")
         print("2 - Defence")
         print("3 - Dodge")
+        print("4 - Use Item")
 
         action_choice = input("Select your action: ")
 
-        if action_choice in ["1","2","3"]:
+        if action_choice in ["1","2","3","4"]:
             if action_choice == "1":
                 if player["class"] == "Warrior":
                     damage, attack_type = warrior_attack(player, enemy)
@@ -66,6 +69,9 @@ def start_combat(player, enemy):
                     player["hp"] -= enemy["base_damage"]
                     print(f"You failed to dodge! {enemy["name"]} dealt {enemy["base_damage"]} to you!")
 
+            elif action_choice == "4":
+                item_action(player)
+
             if enemy["hp"] <= enemy["max_hp"] * 0.2:
                 print(f"{enemy["name"]} is badly wounded and flees!")
                 break
@@ -96,6 +102,7 @@ def start_combat(player, enemy):
         player["xp"] += enemy["xp"]
         print(f"You gained {enemy["xp"]} XP !")
         level_up(player)
+        enemy_drop(player, enemy)
 
 
 def warrior_attack(player, enemy):

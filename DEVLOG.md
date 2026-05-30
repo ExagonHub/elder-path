@@ -6,6 +6,26 @@ Development diary. Decisions, struggles, and progress notes.
 
 ## 29 May 2026
 
+### v0.3 completed
+
+- `data/items.json` created with POTION_001 (Health Potion) and LOOT_001 (Wolf Fang).
+- `game/items.py` created with full inventory management system.
+- `show_inventory(player)` — displays all 18 slots with item names or "Empty".
+- `select_item(player)` — shows inventory, takes slot input, validates range and content, returns index and item. try/except handles non-numeric input.
+- `use_item(player, index, item)` — applies item effect based on `item["effect"]`. Heal uses `min()` to cap HP at max_hp. Slot set to None after use.
+- `drop_item(player, index)` — sets slot to None.
+- `item_action(player)` — chains select_item with use/drop choice menu.
+- `enemy_drop(player, enemy)` — 33% item drop chance, 65% gold drop chance. Item read from items.json via enemy's drop field. Gold randomized between gold_min and gold_max. Quality shown on drop.
+- `player` dict updated: added `inventory`, `gold`, `max_hp`.
+- `enemies.json` updated: added `drop`, `gold_min`, `gold_max` fields per enemy.
+- Combat menu extended to 4 actions: Attack, Defence, Dodge, Use Item.
+
+### Decisions made
+- Item drop at 33%, gold drop at 65% — gold is more common to give economy purpose early.
+- `max_hp` added to player for potion cap logic. Updated in `level_up` as well.
+- Loot items have no `effect` or `value` — they exist only as sellable drops for the economy system in v0.7.
+- Full inventory test deferred to v0.4 — Rich UI will make it much easier to verify visually.
+
 ### v0.2 completed
 
 - `warrior_attack()`, `assassin_attack()`, `mage_attack()` functions added to `combat.py`.

@@ -4,6 +4,16 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.3] — 2026-05-29
+### Added
+- 18-slot inventory system (6 consumable, 12 loot) added to player
+- Item drop system — enemies drop items at 33% chance based on enemy drop table
+- Gold drop system — enemies drop gold at 65% chance within a min/max range
+- Potion: usable in combat via "Use Item" action, restores HP up to max
+- Item quality framework — quality field displayed on item drop
+- `items.py` created: `show_inventory`, `select_item`, `use_item`, `drop_item`, `item_action`, `enemy_drop` functions
+- `data/items.json` created with initial item pool (Health Potion, Wolf Fang)
+
 ## [v0.2] — 2026-05-29
 ### Added
 - Warrior: Stance system (Normal Attack, Defensive Stance, Counter Attack)

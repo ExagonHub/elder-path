@@ -43,13 +43,16 @@ def create_character():
         "level": 1,
         "xp": 0,
         "xp_to_next_level": 90,
+        "max_hp": class_stats["hp"],
         "hp": class_stats["hp"],
         "mp": class_stats["mp"],
         "base_damage": class_stats["base_damage"],
         "str": class_stats["str"],
         "dex": class_stats["dex"],
         "int": class_stats["int"],
-        "vit": class_stats["vit"]
+        "vit": class_stats["vit"],
+        "inventory": [None] * 18 ,
+        "gold": 0
     }
 
     return player
@@ -58,9 +61,11 @@ def create_character():
 def level_up(player):
     if player["xp"] >= player["xp_to_next_level"]:
         player["hp"] += 10
+        player["max_hp"] += 10
         player["mp"] += 5
         player["level"] += 1
         player["xp_to_next_level"] += 50
+
 
         attempts = 3
 
