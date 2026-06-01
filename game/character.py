@@ -1,4 +1,7 @@
 import json
+from rich.columns import Columns
+from game.ui import display_level_up
+from game.ui import display_class_menu
 
 def create_character():
     while True:
@@ -15,9 +18,7 @@ def create_character():
             break
 
     while True:
-        print("1 - Warrior")
-        print("2 - Assassin")
-        print("3 - Mage")
+        display_class_menu()
 
         class_choice = input("Choose your class: ")
 
@@ -45,6 +46,7 @@ def create_character():
         "xp_to_next_level": 90,
         "max_hp": class_stats["hp"],
         "hp": class_stats["hp"],
+        "max_mp": class_stats["mp"],
         "mp": class_stats["mp"],
         "base_damage": class_stats["base_damage"],
         "str": class_stats["str"],
@@ -63,7 +65,9 @@ def level_up(player):
         player["hp"] += 10
         player["max_hp"] += 10
         player["mp"] += 5
+        player["max_mp"] += 5
         player["level"] += 1
+        display_level_up(player)
         player["xp_to_next_level"] += 50
 
 

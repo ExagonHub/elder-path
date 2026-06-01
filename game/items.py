@@ -1,5 +1,6 @@
 import random
 import json
+from game.ui import display_inventory
 
 def show_inventory(player):
     for i, item in enumerate(player["inventory"]):
@@ -11,8 +12,10 @@ def show_inventory(player):
 
 def select_item(player):
     while True:
-        show_inventory(player)
+        display_inventory(player)
         slot_choice = input("Select a slot: ")
+        if slot_choice == "0":
+            return None, None
         try:
             slot = int(slot_choice)
             if 1 <= slot <= 18 and player["inventory"][slot - 1] is not None:
@@ -38,17 +41,23 @@ def drop_item(player, index):
 def item_action(player):
     index, item = select_item(player)
 
+    if index is None:
+        return
+
     while True:
         print("1 - Use")
         print("2 - Drop")
+        print("3 - Back")
 
         action_choice = input("Select action: ")
 
-        if action_choice in ["1","2"]:
+        if action_choice in ["1","2","3"]:
             if action_choice == "1":
                 use_item()
             elif action_choice == "2":
                 drop_item()
+            elif action_choice == "3":
+                break
         else:
             print("Invalid choice. Please enter 1 or 2.")
 

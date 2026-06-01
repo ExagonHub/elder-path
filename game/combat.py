@@ -2,11 +2,29 @@ import random
 from game.character import level_up
 from game.items import enemy_drop
 from game.items import item_action
+from game.ui import show_status
+from game.ui import display_combat_menu
+from game.ui import damage_colors
+from rich.console import Console
+from game.ui import display_attack_menu
+from game.ui import display_enemy_info
+
+console = Console()
+
+attack_to_damage = {
+    "normal": "physical",
+    "rapid": "physical",
+    "piercing": "physical",
+    "defensive": "physical",
+    "counter": "physical",
+    "fireball": "fire",
+    "frost": "frost",
+    "lightning": "lightning"
+}
 
 def start_combat(player, enemy):
-    print(f"You encountered a {enemy["name"]}")
-
     enemy["max_hp"] = enemy["hp"]
+
 
     stunned = False
     is_defending = False
@@ -14,10 +32,10 @@ def start_combat(player, enemy):
     
     while (player["hp"] > 0) and (enemy["hp"] > 0):
 
-        print("1 - Attack")
-        print("2 - Defence")
-        print("3 - Dodge")
-        print("4 - Use Item")
+        show_status(player, enemy)
+
+
+        display_combat_menu(player)
 
         action_choice = input("Select your action: ")
 
@@ -53,9 +71,11 @@ def start_combat(player, enemy):
                         enemy["hp"] -= damage
 
                 if attack_type == "rapid":
-                    print(f"You dealt {damage * 2} damage with rapid to {enemy["name"]}! (2x {damage})")
+                    color = damage_colors[attack_to_damage[attack_type]]
+                    console.print(f"[{color}]You dealt {damage * 2} damage with rapid to {enemy["name"]}! (2x {damage})[/{color}]")
                 else:
-                    print(f"You dealt {damage} damage with {attack_type} to {enemy["name"]}!")
+                    color = damage_colors[attack_to_damage[attack_type]]
+                    console.print(f"[{color}]You dealt {damage} damage with {attack_type} to {enemy["name"]}![/{color}]")
 
             elif action_choice == "2":
                 is_defending = True
@@ -92,7 +112,7 @@ def start_combat(player, enemy):
                 print(f"{enemy["name"]} dealt {enemy["base_damage"]} damage to you !")
 
         else:
-            print("Invalid choice. Please enter 1 or 2")
+            print("Invalid choice. Please enter 1, 2, 3 or 4")
 
     if player["hp"] <= 0:
         print("You have been defeated.")
@@ -107,9 +127,7 @@ def start_combat(player, enemy):
 
 def warrior_attack(player, enemy):
     while True:
-        print("1 - Normal Attack")
-        print("2 - Defensive Stance")
-        print("3 - Counter Attack")
+        display_attack_menu(player)
 
         stance_choice = input("Select your stance: ")
 
@@ -137,9 +155,7 @@ def warrior_attack(player, enemy):
 
 def assassin_attack(player, enemy):
     while True:
-        print("1 - Normal Attack")
-        print("2 - Rapid Attack")
-        print("3 - Piercer Attack")
+        display_attack_menu(player)
 
         stance_choice = input("Select your stance: ")
 
@@ -166,9 +182,7 @@ def assassin_attack(player, enemy):
 
 def mage_attack(player, enemy):
     while True:
-        print("1 - Fireball")
-        print("2 - Frost")
-        print("3 - Lightning")
+        display_attack_menu(player)
 
         stance_choice = input("Select your choice: ")
 

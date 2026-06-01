@@ -1,3 +1,1 @@
-# No dependencies yet.
-# Add packages here as the project grows.
-# Example: colorama==0.4.6
+rich == 15.0.0

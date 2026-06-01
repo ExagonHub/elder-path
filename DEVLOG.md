@@ -4,6 +4,39 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 01 Haziran 2026
+
+### v0.4 completed
+
+- `game/ui.py` created — all visual output centralized here. Separation of concerns: data in character/combat/items, visuals in ui.
+- `show_status(player, enemy=None)` — displays Player and Status panels side by side using Rich Columns. If enemy is provided, Enemy panel added as third column with dynamic HP bar.
+- `display_inventory(player)` — displays 18-slot inventory as a Rich Table with Slot, Item, Quality columns. Quality color-coded: Common (bright_white), Uncommon (green), Rare (cyan), Epic (purple), Legendary (yellow).
+- `display_level_up(player)` — displays level up panel when player levels up. Shows new level and +3 stat points message.
+- `display_combat_menu(player)` — displays styled combat action menu (Attack, Defence, Dodge, Use Item) in a Panel.
+- `display_attack_menu(player)` — single function handles all three class attack submenus. Shows correct options based on player class.
+- `display_main_menu()` — styled main menu panel centered on screen. Title: ELDER PATH, slogan: "Every beginning has its end."
+- `display_play_menu()` — styled New Game / Load Game panel. Title: "Welcome to the Beginning."
+- `display_class_menu()` — styled class selection panel with short description per class.
+- `damage_colors` dict added globally in ui.py — maps damage types to colors (physical, fire, frost, lightning, critical, poison, shadow).
+- `attack_to_damage` dict added in combat.py — maps attack_type strings to damage type keys.
+- Hasar mesajları renklendirildi — her saldırı tipine göre ilgili renk uygulandı.
+- Enemy HP bar implemented manually using █ and ░ characters. Color changes dynamically: green above 50%, yellow above 25%, red below 25%.
+- `select_item()` updated — input 0 returns None, None to allow exiting inventory.
+- `item_action()` updated — checks for None return from select_item, exits cleanly.
+- `max_mp` added to player dict for consistency with max_hp.
+- `max_mp` now scales on level up alongside max_hp.
+
+### Decisions made
+- ui.py created as separate file — all Rich components live here, not scattered across game files.
+- `show_status` extended with optional enemy parameter instead of a separate display_enemy_info call — avoids rendering gap between panels.
+- Manual HP bar chosen over Rich Progress — Progress is designed for live updates, not per-turn redraws. Manual bar gives full color control.
+- Visual polish details (menu alignment, panel sizing consistency, grid-style inventory) deferred to later versions — noted in TODO.
+- Keyboard navigation for menus deferred — requires prompt_toolkit, out of scope for v0.4.
+- Item info screen (show item details on selection) deferred — noted in TODO.
+- damage_colors and attack_to_damage kept as dicts — clean, extensible, no if/elif chains needed when new damage types are added.
+
+---
+
 ## 29 May 2026
 
 ### v0.3 completed

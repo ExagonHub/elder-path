@@ -2,11 +2,12 @@ import json
 import sys
 from game.combat import start_combat
 from game.character import create_character
+from game.ui import show_status
+from game.ui import display_main_menu
+from game.ui import display_play_menu
 
 def menu():
-    print('1 - Play')
-    print('2 - Settings')
-    print('3 - Quit')
+    display_main_menu()
 
     while True:
         choice = input('Enter your choice: ').strip()
@@ -19,8 +20,7 @@ def menu():
 def play_menu():
     
     while True:
-        print("1 - New Game")
-        print("2 - Load Game")
+        display_play_menu()
 
         game_choice = input("Select: ")
 
@@ -37,6 +37,7 @@ def main():
 
         if play_choice == "1":
             player = create_character()
+            # show_status(player)
             with open("data/enemies.json") as file:
                 enemies = json.load(file)
                 enemy = enemies["ENEMY_001"]
