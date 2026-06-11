@@ -7,7 +7,7 @@
 | v0.2 | Combat system - class-specific actions | ✅ Complete |
 | v0.3 | Items and inventory | ✅ Complete |
 | v0.4 | Rich terminal UI | ✅ Complete |
-| v0.5 | Equipment system | ⏳ Pending |
+| v0.5 | Equipment system | ✅ Complete |
 | v0.6 | World and exploration | ⏳ Pending |
 | v0.7 | NPCs and economy | ⏳ Pending |
 | v0.8 | Enemy variety | ⏳ Pending |

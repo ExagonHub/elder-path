@@ -5,6 +5,8 @@ from game.character import create_character
 from game.ui import show_status
 from game.ui import display_main_menu
 from game.ui import display_play_menu
+from game.ui import display_game_menu
+from game.ui import display_equipment
 
 def menu():
     display_main_menu()
@@ -41,8 +43,18 @@ def main():
             with open("data/enemies.json") as file:
                 enemies = json.load(file)
                 enemy = enemies["ENEMY_001"]
+                while True:
+                    display_game_menu()
+
+                    game_choice = input("Select: ")
+
+                    if game_choice == "1":
+                        start_combat(player, enemy)
+                    elif game_choice == "2":
+                        display_equipment(player)
+                    elif game_choice == "3":
+                        break
             
-            start_combat(player, enemy)
         elif play_choice == "2":
             pass
 

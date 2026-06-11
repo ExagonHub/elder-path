@@ -54,7 +54,18 @@ def create_character():
         "int": class_stats["int"],
         "vit": class_stats["vit"],
         "inventory": [None] * 18 ,
-        "gold": 0
+        "gold": 0,
+        "defense": 0,
+        "magic_resistance": 0,
+        "equipment": {
+            "helmet": None,
+            "chest": None,
+            "gloves": None,
+            "boots": None,
+            "main_hand": None,
+            "off_hand": None,
+            "accessory": None
+        }
     }
 
     return player

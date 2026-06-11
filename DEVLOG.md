@@ -4,7 +4,36 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
-## 01 Haziran 2026
+## 11 June 2026
+
+### v0.5 completed
+
+- `data/weapons.json` created — 9 weapons across 3 classes. Keys: WEAPON_001 format. Fields: name, type, damage, quality, price, slot, allowed_classes. Prices set to 0 placeholder.
+- `data/armors.json` created — 6 armor entries (helmet + chest per class). Fields: name, type, defense, magic_resistance, quality, price, slot, allowed_classes.
+- `data/accessories.json` created — ACC_001 Traveler's Amulet, Common quality, xp_luck +5%.
+- `game/equipment.py` created — three core functions.
+- `get_total_stats(player)` — iterates player["equipment"] slots, merges item stats onto base stats, returns combined dict. Base stats never modified.
+- `equip_item(player, index, item)` — checks allowed_classes, handles two_hand slot locking (off_hand item auto-returned to inventory), auto-swaps occupied slots, places item in correct slot, clears inventory slot.
+- `unequip_item(player, slot)` — checks inventory space before unequipping, returns item to first empty inventory slot, clears equipment slot.
+- `display_equipment(player)` added to ui.py — three Rich Tables rendered side by side via Columns: Armor (helmet/chest/gloves/boots), Character (name/class/level/accessory), Weapons (main_hand/off_hand). Empty slots show [ empty ].
+- `display_game_menu()` added to ui.py — in-game navigation panel: Combat, Equipment, Exit.
+- Game loop added to main.py — while True loop after character creation, player chooses action before entering combat.
+- `item_action()` updated in items.py — Equip option appears only for weapon/armor/accessory types. Equip calls equip_item() with player, index, item.
+- player dict updated: defense=0, magic_resistance=0, equipment dict with all slots set to None.
+- combat.py updated: base_damage now reads from get_total_stats(). Enemy damage reduced by player defense using max(0, ...) formula.
+
+### Decisions made
+- WEAPON_001 key format chosen over type-based keys (SWORD_001) — simpler, consistent with existing patterns.
+- speed stat removed from weapons — attack speed meaningless in turn-based combat, deferred to Faz 2.
+- magic_resistance added to armors but passive — no magic enemies yet, activates in v0.8.
+- Accessory bonuses percentage-based — flat values lose value as economy scales.
+- One accessory slot — expandable if a second accessory type is introduced later.
+- Equip from inventory chosen over equip from equipment screen — reuses existing select_item flow.
+- get_total_stats returns new dict — base stats stay clean, no risk of stat corruption on unequip.
+- Starting equipment goes to inventory — player equips manually, consistent with game flow.
+- Prices all 0 — balance deferred to v1.0 playtest.
+
+## 01 June 2026
 
 ### v0.4 completed
 

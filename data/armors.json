@@ -1,0 +1,67 @@
+{
+    "ARMOR_001": {
+        "name": "Iron Helm",
+        "type": "helmet",
+        "defense": 2,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "helmet",
+        "allowed_classes": ["Warrior"]
+    },
+
+    "ARMOR_002": {
+        "name": "Iron Armor",
+        "type": "body_armor",
+        "defense": 3,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "chest",
+        "allowed_classes": ["Warrior"]
+    },
+
+    "ARMOR_003": {
+        "name": "Leather Hood",
+        "type": "helmet",
+        "defense": 2,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "helmet",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "ARMOR_004": {
+        "name": "Leather Jacket",
+        "type": "body_armor",
+        "defense": 3,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "chest",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "ARMOR_005": {
+        "name": "Linen Cap",
+        "type": "helmet",
+        "defense": 2,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "helmet",
+        "allowed_classes": ["Mage"]
+    },
+
+    "ARMOR_006": {
+        "name": "Linen Robe",
+        "type": "body_armor",
+        "defense": 3,
+        "magic_resistence": 1,
+        "quality": "common",
+        "price": 0,
+        "slot": "chest",
+        "allowed_classes": ["Mage"]
+    }
+}

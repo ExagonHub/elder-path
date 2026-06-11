@@ -1,0 +1,9 @@
+{
+    "ACC_001": {
+        "name": "Traveler's Amulet",
+        "type": "amulet",
+        "quality": "common",
+        "price": 0,
+        "bonuses": {"xp_luck": 5}
+    }
+}

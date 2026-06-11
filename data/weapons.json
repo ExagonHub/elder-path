@@ -1,0 +1,87 @@
+{
+    "WEAPON_001": {
+        "name": "Ironclad Sword",
+        "type": "sword",
+        "damage": 3,
+        "quality": "common",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Warrior"]
+    },
+
+    "WEAPON_002": {
+        "name": "Battleforged Longsword",
+        "type": "longsword",
+        "damage": 7,
+        "quality": "uncommon",
+        "price": 0,
+        "slot": "two_hand",
+        "allowed_classes": ["Warrior"]
+    },
+
+    "WEAPON_003": {
+        "name": "Ravager Axe",
+        "type": "axe",
+        "damage": 4,
+        "quality": "common",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Warrior"]
+    },
+
+    "WEAPON_004": {
+        "name": "Shadowfang Dagger",
+        "type": "dagger",
+        "damage": 3,
+        "quality": "common",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "WEAPON_005": {
+        "name": "Whisper Dagger",
+        "type": "dagger",
+        "damage": 4,
+        "quality": "uncommon",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "WEAPON_006": {
+        "name": "Hunters Bow",
+        "type": "bow",
+        "damage": 4,
+        "quality": "common",
+        "slot": "two_hand",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "WEAPON_007": {
+        "name": "Apprentice Staff",
+        "type": "staff",
+        "damage": 3,
+        "quality": "common",
+        "slot": "main_hand",
+        "allowed_classes": ["Mage"]
+    },
+
+    "WEAPON_008": {
+        "name": "Emberwood Staf",
+        "type": "staff",
+        "damage": 7,
+        "quality": "uncommon",
+        "slot": "two_hand",
+        "allowed_classes": ["Mage"]
+    },
+
+    "WEAPON_009": {
+        "name": "Cracked Grimoire",
+        "type": "grimoire",
+        "damage": 4,
+        "quality": "common",
+        "slot": "main_hand",
+        "allowed_classes": ["Mage"]
+    }
+}

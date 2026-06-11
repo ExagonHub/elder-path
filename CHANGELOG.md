@@ -3,6 +3,34 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.5] — 2026-06-11
+### Added
+- `data/weapons.json` created — 9 weapon entries (Warrior, Assassin, Mage), Common and Uncommon quality
+- `data/armors.json` created — 6 armor entries (helmet + chest per class), Common quality
+- `data/accessories.json` created — initial accessory pool (Traveler's Amulet), percentage-based XP bonus
+- `game/equipment.py` created — equipment system module
+- `get_total_stats(player)` — merges base stats with equipped gear, returns combined dict
+- `equip_item(player, index, item)` — equips item from inventory to correct slot, class restriction check, two-hand locking, auto-swap if slot occupied
+- `unequip_item(player, slot)` — unequips item to inventory, blocks if inventory full
+- `display_equipment(player)` added to `ui.py` — three-panel equipment screen (Armor / Character / Weapons)
+- `display_game_menu()` added to `ui.py` — in-game menu (Combat, Equipment, Exit)
+- Game loop added to `main.py` — player navigates game menu before entering combat
+- Equip option added to `item_action()` in `items.py` — weapon, armor, accessory items can be equipped from inventory
+- `defense` and `magic_resistance` added to player dict (base value 0)
+- `equipment` dict added to player dict — all slots default to None
+- Damage calculation updated — base_damage now reads from `get_total_stats()`
+- Enemy damage now reduced by player defense — `max(0, enemy_damage - defense)`
+
+### Decisions made
+- `magic_resistance` passive for now — activates alongside magic enemies in v0.8
+- Attack speed stat deferred to Faz 2 — meaningless in turn-based combat
+- Accessory bonuses are percentage-based — flat values lose meaning as game progresses
+- Bonus count scales with quality: Common 1, Uncommon 1-2, Rare 2, Epic 2-3, Legendary 3
+- One accessory slot for now — expandable to 2 in future versions
+- Equip from inventory (Option A) — cleaner separation of concerns
+- `get_total_stats()` returns separate dict — base stats never modified, no corruption risk
+- Prices set to 0 placeholder — will be balanced post-v1.0 playtest
+
 ## [v0.4] — 2026-06-01
 ### Added
 - `game/ui.py` created — centralized UI module using Rich library

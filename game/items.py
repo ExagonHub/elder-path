@@ -1,6 +1,7 @@
 import random
 import json
 from game.ui import display_inventory
+from game.equipment import equip_item
 
 def show_inventory(player):
     for i, item in enumerate(player["inventory"]):
@@ -49,17 +50,25 @@ def item_action(player):
         print("2 - Drop")
         print("3 - Back")
 
+        if item["type"] in ["weapon", "armor", "accessory"]:
+            print("4 - Equip")
+
         action_choice = input("Select action: ")
 
-        if action_choice in ["1","2","3"]:
+        if action_choice in ["1","2","3","4"]:
             if action_choice == "1":
                 use_item()
             elif action_choice == "2":
                 drop_item()
             elif action_choice == "3":
                 break
+            elif action_choice == "4":
+                if item["type"] in ["weapon","armor","accessory"]:
+                    equip_item(player, index, item)
+                else:
+                    print("This item cannot be equipped.")
         else:
-            print("Invalid choice. Please enter 1 or 2.")
+            print("Invalid choice. Please enter 1, 2 or 3.")
 
 
 def enemy_drop(player, enemy):

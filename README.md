@@ -42,11 +42,18 @@ elder-path/
 ├── .gitignore
 ├── data/
 │   ├── classes.json     # Class definitions and starting stats
-│   └── enemies.json     # Enemy pool and stats
+│   ├── enemies.json     # Enemy pool and stats
+│   ├── items.json       # Item pool (potions, loot)
+│   ├── weapons.json     # Weapon pool and stats
+│   ├── armors.json      # Armor pool and stats
+│   └── accessories.json # Accessory pool and stats
 └── game/
     ├── __init__.py
     ├── character.py     # Character creation and level up
-    └── combat.py        # Combat loop and class-specific mechanics
+    ├── combat.py        # Combat loop and class-specific mechanics
+    ├── items.py         # Inventory management, item drop, gold
+    ├── equipment.py     # Equipment system, stat merging
+    └── ui.py            # Rich terminal UI — all visual output
 ```
 
 ## Development Status
@@ -55,10 +62,17 @@ elder-path/
 |---------|-------|--------|
 | v0.1 | Core loop | ✅ Complete |
 | v0.2 | Combat system | ✅ Complete |
-| v0.3 | Items and inventory | ⏳ Pending |
-| v0.4 | Equipment system | ⏳ Pending |
-| v0.5+ | World, NPCs, bosses... | ⏳ Pending |
+| v0.3 | Items and inventory | ✅ Complete |
+| v0.4 | Rich Terminal UI | ✅ Complete |
+| v0.5 | Equipment system | ✅ Complete |
+| v0.6 | World and exploration | ⏳ Pending |
+| v0.7 | NPCs and economy | ⏳ Pending |
+| v0.8 | Enemy variety | ⏳ Pending |
+| v0.9 | Boss system | ⏳ Pending |
+| v0.10 | Zone color system | ⏳ Pending |
 | v1.0 | Playtest, balance, polish | ⏳ Pending |
+| v1.1 | Upgrades and bank | ⏳ Pending |
+| v1.2 | World expansion | ⏳ Pending |
 
 ---
 

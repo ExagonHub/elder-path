@@ -8,6 +8,7 @@ from game.ui import damage_colors
 from rich.console import Console
 from game.ui import display_attack_menu
 from game.ui import display_enemy_info
+from game.equipment import get_total_stats
 
 console = Console()
 
@@ -108,8 +109,9 @@ def start_combat(player, enemy):
                 print(f"{enemy["name"]} dealt {enemy["base_damage"] // 2} damage to you! (Blocked)")
                 is_defending = False
             else:
-                player["hp"] -= enemy["base_damage"]
-                print(f"{enemy["name"]} dealt {enemy["base_damage"]} damage to you !")
+                actual_damage = max(0, enemy["base_damage"] - get_total_stats(player)["defense"])
+                player["hp"] -= actual_damage
+                print(f"{enemy["name"]} dealt {actual_damage} damage to you !")
 
         else:
             print("Invalid choice. Please enter 1, 2, 3 or 4")
@@ -132,7 +134,7 @@ def warrior_attack(player, enemy):
         stance_choice = input("Select your stance: ")
 
         bonus = player["str"] // 2
-        damage = player["base_damage"] + bonus
+        damage = get_total_stats(player)["base_damage"] + bonus
 
         if stance_choice in ["1","2","3"]:
             if stance_choice == "1":
@@ -160,7 +162,7 @@ def assassin_attack(player, enemy):
         stance_choice = input("Select your stance: ")
 
         bonus = player["dex"] // 2
-        damage = player["base_damage"] + bonus
+        damage = get_total_stats(player)["base_damage"] + bonus
 
         if stance_choice in ["1","2","3"]:
             if stance_choice == "1":
@@ -187,7 +189,7 @@ def mage_attack(player, enemy):
         stance_choice = input("Select your choice: ")
 
         bonus = player["int"] // 2
-        damage = player["base_damage"] + bonus
+        damage = get_total_stats(player)["base_damage"] + bonus
 
         if stance_choice in ["1","2","3"]:
             if stance_choice == "1":

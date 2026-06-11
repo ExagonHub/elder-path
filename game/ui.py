@@ -131,6 +131,67 @@ def display_enemy_info(enemy):
     console.print(panel, justify="right")
 
 
+def display_equipment(player):
+    console = Console()
+    armor_table = Table(title="Armor", border_style="purple4")
+    armor_table.add_column("Slot Name")
+    armor_table.add_column("Item Name")
+
+    helmet = player["equipment"]["helmet"]["name"] if player["equipment"]["helmet"] is not None else "[ empty ]"
+
+    armor_table.add_row("Helmet", helmet)
+
+    chest = player["equipment"]["chest"]["name"] if player["equipment"]["chest"] is not None else "[ empty ]"
+
+    armor_table.add_row("Chest", chest)
+
+    gloves = player["equipment"]["gloves"]["name"] if player["equipment"]["gloves"] is not None else "[ empty ]"
+
+    armor_table.add_row("Gloves", gloves)
+
+    boots = player["equipment"]["boots"]["name"] if player["equipment"]["boots"] is not None else "[ empty ]"
+
+    armor_table.add_row("Boots", boots)
+
+    char_table = Table(title="Character", border_style="purple4")
+    char_table.add_column("")
+    char_table.add_column("")
+
+    char_table.add_row("Name", player["name"])
+    char_table.add_row("Class", player["class"])
+    char_table.add_row("Level", str(player["level"]))
+    char_table.add_row("Accessory", player["equipment"]["accessory"]["name"] if player["equipment"]["accessory"] is not None else "[ empty ]")
+
+    weapon_table = Table(title="Weapons", border_style="purple4")
+    weapon_table.add_column("Slot Name")
+    weapon_table.add_column("Item Name")
+
+    main_hand = player["equipment"]["main_hand"]["name"] if player["equipment"]["main_hand"] is not None else "[ empty ]"
+
+    weapon_table.add_row("Main hand", main_hand)
+
+    off_hand = player["equipment"]["off_hand"]["name"] if player["equipment"]["off_hand"] is not None else "[ empty ]"
+    
+    weapon_table.add_row("Off hand", off_hand)
+
+    Columns([armor_table, char_table, weapon_table])
+
+    console.print(Columns([armor_table, char_table, weapon_table]))
+
+
+def display_game_menu():
+    console = Console()
+    panel = Panel("[bright_magenta]1[/bright_magenta] - [bright_white]Combat[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Equipment[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Exit[/bright_white]", title="Game Menu", border_style="purple4")
+
+    console.print(panel, justify="center")
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
