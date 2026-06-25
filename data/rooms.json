@@ -1,0 +1,94 @@
+{
+    "ROOM_001": {
+        "name": "Ember's Cross",
+        "type": "village",
+        "zone_type": "green",
+        "encounter_chance": 0,
+        "enemy_pool": [],
+        "chest": null,
+        "connections": {
+            "north": "ROOM_002",
+            "south": "ROOM_003",
+            "east": "ROOM_004",
+            "west": "ROOM_005"
+        }
+    },
+
+    "ROOM_002": {
+        "name": "Ashwood Trail",
+        "type": "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 100,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "chest": null,
+        "connections": {
+            "north": "ROOM_001"
+        }
+    },
+
+    "ROOM_003": {
+        "name": "Mistveil Grove",
+        "type" : "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 100,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "chest": null,
+        "connections": {
+            "east": "ROOM_001"
+        }
+    },
+
+    "ROOM_004": {
+        "name": "Thornfield Path",
+        "type": "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 100,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "chest": null,
+        "connections": {
+            "west": "ROOM_001"
+        }
+    },
+
+    "ROOM_005": {
+        "name": "Darkwood Age",
+        "type": "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 100,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "chest": null,
+        "connections": {
+            "south": "ROOM_001",
+            "north": "ROOM_006"
+        }
+    },
+
+    "ROOM_006": {
+        "name": "Shadowmere Thicket",
+        "type": "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 50,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "chest": null,
+        "connections": {
+            "south": "ROOM_005",
+            "north": "ROOM_007"
+        }
+    },
+
+    "ROOM_007": {
+        "name": "The Hollow Depths",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 100,
+        "enemy_pool": ["ENEMY_001", "ENEMY_002"],
+        "connections": {
+            "south": "ROOM_006"
+        },
+        "chest": {
+            "loot_pool": ["WEAPON_001", "ARMOR_001"],
+            "quality": "common",
+            "opened": false
+        }
+    }
+}

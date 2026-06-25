@@ -46,13 +46,15 @@ elder-path/
 │   ├── items.json       # Item pool (potions, loot)
 │   ├── weapons.json     # Weapon pool and stats
 │   ├── armors.json      # Armor pool and stats
-│   └── accessories.json # Accessory pool and stats
+│   ├── accessories.json # Accessory pool and stats
+│   └── rooms.json       # Room definitions, connections, zone types
 └── game/
     ├── __init__.py
     ├── character.py     # Character creation and level up
     ├── combat.py        # Combat loop and class-specific mechanics
     ├── items.py         # Inventory management, item drop, gold
     ├── equipment.py     # Equipment system, stat merging
+    ├── world.py         # World navigation, encounters, death penalty
     └── ui.py            # Rich terminal UI — all visual output
 ```
 
@@ -65,7 +67,7 @@ elder-path/
 | v0.3 | Items and inventory | ✅ Complete |
 | v0.4 | Rich Terminal UI | ✅ Complete |
 | v0.5 | Equipment system | ✅ Complete |
-| v0.6 | World and exploration | ⏳ Pending |
+| v0.6 | World and exploration | ✅ Complete |
 | v0.7 | NPCs and economy | ⏳ Pending |
 | v0.8 | Enemy variety | ⏳ Pending |
 | v0.9 | Boss system | ⏳ Pending |

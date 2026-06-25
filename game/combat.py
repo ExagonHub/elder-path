@@ -9,6 +9,7 @@ from rich.console import Console
 from game.ui import display_attack_menu
 from game.ui import display_enemy_info
 from game.equipment import get_total_stats
+from game.world import death_penalty
 
 console = Console()
 
@@ -23,7 +24,7 @@ attack_to_damage = {
     "lightning": "lightning"
 }
 
-def start_combat(player, enemy):
+def start_combat(player, enemy, zone_type):
     enemy["max_hp"] = enemy["hp"]
 
 
@@ -93,9 +94,11 @@ def start_combat(player, enemy):
             elif action_choice == "4":
                 item_action(player)
 
-            if enemy["hp"] <= enemy["max_hp"] * 0.2:
-                print(f"{enemy["name"]} is badly wounded and flees!")
-                break
+
+            if zone_type != "red":
+                if enemy["hp"] <= enemy["max_hp"] * 0.2:
+                    print(f"{enemy["name"]} is badly wounded and flees!")
+                    break
 
             
             if stunned:
@@ -118,6 +121,7 @@ def start_combat(player, enemy):
 
     if player["hp"] <= 0:
         print("You have been defeated.")
+        death_penalty(player)
 
     elif enemy["hp"] <= 0:
         print(f"Victory ! You defeated {enemy["name"]} !")

@@ -65,7 +65,9 @@ def create_character():
             "main_hand": None,
             "off_hand": None,
             "accessory": None
-        }
+        },
+        "current_room": "ROOM_001",
+        "previous_room": None
     }
 
     return player

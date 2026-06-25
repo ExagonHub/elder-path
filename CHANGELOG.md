@@ -3,6 +3,28 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.6] — 2026-06-25
+### Added
+- `data/rooms.json` created — 7 rooms (1 village, 5 forest, 1 dungeon), zone types, connections, encounter chances
+- `game/world.py` created — world and exploration module
+- `move(player)` — room-based navigation via N/S/E/W direction input, updates current_room and previous_room
+- `encounter(player)` — random encounter system based on encounter_chance; yellow zone offers Fight/Flee choice, red zone forces combat
+- `death_penalty(player)` — zone-based death penalty; yellow revives at 40% HP / 30% MP, red zone deducts 30% gold
+- `open_chest(player, location)` — chest interaction after combat; shows loot pool, player selects item, added to inventory, chest marked as opened
+- `display_room(location)` added to `ui.py` — shows room name, zone type, and available paths
+- `display_game_menu()` updated — Travel option added, Exit renamed to Quit Game
+- `player["current_room"]` and `player["previous_room"]` added to player dict
+- `zone_type` parameter added to `start_combat()` — prevents enemy flee in red zone
+
+### Decisions made
+- rooms.json chosen over in-code room definitions — consistent with existing data/logic separation
+- N/S/E/W direction input — immersive, connections stored as full direction names in JSON
+- Flee in yellow zone returns player to previous_room
+- Chest only in dungeon (red zone) — risk/reward balance
+- Enemy pool stored as list in rooms.json — weighted pool deferred to v0.8
+- `previous_room` tracked in player dict — enables flee mechanic without extra parameters
+- Red zone death penalty defers village respawn to a later version
+
 ## [v0.5] — 2026-06-11
 ### Added
 - `data/weapons.json` created — 9 weapon entries (Warrior, Assassin, Mage), Common and Uncommon quality

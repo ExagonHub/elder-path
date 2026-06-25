@@ -4,6 +4,37 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 25 June 2026
+
+### v0.6 completed
+
+- `data/rooms.json` created — 7 rooms total: 1 village (Ember's Cross), 5 forest, 1 dungeon (The Hollow Depths). Fields: name, type, zone_type, encounter_chance, enemy_pool, chest, connections.
+- `game/world.py` created — world and exploration module.
+- `move(player)` — takes N/S/E/W direction input, maps to full direction name, checks connections, updates current_room and previous_room.
+- `encounter(player)` — rolls against encounter_chance on room entry. Yellow zone presents Fight/Flee choice. Red zone forces combat automatically. Enemy selected randomly from enemy_pool.
+- `death_penalty(player)` — reads zone_type from current room. Yellow: revives at 40% HP / 30% MP. Red: deducts 30% of current gold.
+- `open_chest(player, location)` — triggered after combat in rooms with chest. Shows loot_pool items, player selects one, item added to first empty inventory slot, chest marked as opened.
+- `display_room(location)` added to ui.py — Panel showing room name, zone type, and available paths in uppercase.
+- `display_game_menu()` updated — Travel option added as 3rd choice, Quit Game replaces Exit.
+- `player["current_room"]` and `player["previous_room"]` added to player dict in character.py.
+- `zone_type` parameter added to `start_combat()` — enemy flee blocked in red zone.
+- `encounter(player)` called inside `move()` after every room transition.
+- Chest loot reads from weapons.json and armors.json — merged into single dict for lookup.
+
+### Decisions made
+- rooms.json over in-code definitions — consistent with data/logic separation pattern.
+- N/S/E/W input — immersive, connections stored as full direction names in JSON.
+- Flee in yellow zone returns player to previous_room — tracked in player dict, no extra parameters needed.
+- Chest only in dungeon (red zone) — risk/reward balance, green and yellow zones need no reward incentive.
+- Enemy pool as simple list — weighted pool deferred to v0.8 when enemy variety expands.
+- zone_type passed as parameter to start_combat — combat.py stays independent of rooms.json.
+- Red zone death penalty village respawn deferred — noted for future version.
+- More menu / inventory access from game menu deferred — noted for post-v0.7.
+- Terminal clear issue deferred — noted for post-v0.7.
+- Player stats not displayed after combat deferred — noted for post-v0.7.
+
+---
+
 ## 11 June 2026
 
 ### v0.5 completed
@@ -32,6 +63,8 @@ Development diary. Decisions, struggles, and progress notes.
 - get_total_stats returns new dict — base stats stay clean, no risk of stat corruption on unequip.
 - Starting equipment goes to inventory — player equips manually, consistent with game flow.
 - Prices all 0 — balance deferred to v1.0 playtest.
+
+---
 
 ## 01 June 2026
 

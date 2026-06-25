@@ -181,8 +181,14 @@ def display_equipment(player):
 
 def display_game_menu():
     console = Console()
-    panel = Panel("[bright_magenta]1[/bright_magenta] - [bright_white]Combat[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Equipment[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Exit[/bright_white]", title="Game Menu", border_style="purple4")
+    panel = Panel("[bright_magenta]1[/bright_magenta] - [bright_white]Combat[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Equipment[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Travel[/bright_white]\n[bright_magenta]4[/bright_magenta] - [bright_white]Quit Game[/bright_white]", title="Game Menu", border_style="purple4")
 
+    console.print(panel, justify="center")
+
+
+def display_room(location):
+    console = Console()
+    panel = Panel(f"{location['name']} | {location['zone_type']}\nPaths: {', '.join(k.upper() for k in location['connections'].keys())}", title="Room Information", border_style="purple4")
     console.print(panel, justify="center")
 
 

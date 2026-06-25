@@ -7,6 +7,7 @@ from game.ui import display_main_menu
 from game.ui import display_play_menu
 from game.ui import display_game_menu
 from game.ui import display_equipment
+from game.world import move
 
 def menu():
     display_main_menu()
@@ -53,6 +54,8 @@ def main():
                     elif game_choice == "2":
                         display_equipment(player)
                     elif game_choice == "3":
+                        move(player)
+                    elif game_choice == "4":
                         break
             
         elif play_choice == "2":
