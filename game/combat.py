@@ -10,6 +10,7 @@ from game.ui import display_attack_menu
 from game.ui import display_enemy_info
 from game.equipment import get_total_stats
 from game.world import death_penalty
+from game.ui import clear_terminal
 
 console = Console()
 
@@ -33,7 +34,7 @@ def start_combat(player, enemy, zone_type):
     dodged = False
     
     while (player["hp"] > 0) and (enemy["hp"] > 0):
-
+        clear_terminal()
         show_status(player, enemy)
 
 
@@ -98,6 +99,8 @@ def start_combat(player, enemy, zone_type):
             if zone_type != "red":
                 if enemy["hp"] <= enemy["max_hp"] * 0.2:
                     print(f"{enemy["name"]} is badly wounded and flees!")
+                    input("\nPress Enter to continue...")
+                    clear_terminal()
                     break
 
             
@@ -122,6 +125,8 @@ def start_combat(player, enemy, zone_type):
     if player["hp"] <= 0:
         print("You have been defeated.")
         death_penalty(player)
+        input("\nA true warrior never gives up. Rise and continue your story... Press Enter to revive.")
+        clear_terminal()
 
     elif enemy["hp"] <= 0:
         print(f"Victory ! You defeated {enemy["name"]} !")
@@ -129,6 +134,8 @@ def start_combat(player, enemy, zone_type):
         print(f"You gained {enemy["xp"]} XP !")
         level_up(player)
         enemy_drop(player, enemy)
+        input("\nPress Enter to continue...")
+        clear_terminal()
 
 
 def warrior_attack(player, enemy):

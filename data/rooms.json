@@ -22,7 +22,7 @@
         "enemy_pool": ["ENEMY_001", "ENEMY_002"],
         "chest": null,
         "connections": {
-            "north": "ROOM_001"
+            "south": "ROOM_001"
         }
     },
 
@@ -34,7 +34,7 @@
         "enemy_pool": ["ENEMY_001", "ENEMY_002"],
         "chest": null,
         "connections": {
-            "east": "ROOM_001"
+            "north": "ROOM_001"
         }
     },
 
@@ -58,7 +58,7 @@
         "enemy_pool": ["ENEMY_001", "ENEMY_002"],
         "chest": null,
         "connections": {
-            "south": "ROOM_001",
+            "east": "ROOM_001",
             "north": "ROOM_006"
         }
     },

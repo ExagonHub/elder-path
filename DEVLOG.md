@@ -4,6 +4,27 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 29 June 2026
+
+### v0.6.1 completed
+
+- `clear_terminal()` added to `ui.py` — cross-platform terminal clear using `os.system("cls")` on Windows, `"clear"` on Linux/Mac.
+- `clear_terminal()` integrated into all major screen transitions: combat loop start, post-combat (victory and flee), player death, chest open and leave, room transitions, green zone combat attempt, character creation flow.
+- Welcome screen added after character creation — shows player name and class, Enter to continue.
+- Dungeon entry now shows room information before combat begins — Enter prompt added.
+- Revive message added on player death — "A true warrior never gives up. Rise and continue your story..."
+- Direction connections in `rooms.json` corrected — ROOM_002 (south), ROOM_003 (north), ROOM_004 (west), ROOM_005 (east) return connections were wrong.
+- `zone_type` now correctly passed to `start_combat()` from `main.py`.
+- Green zone combat attempt handled — shows "There are no enemies here." instead of crashing.
+- `rooms.json` loaded in `main.py` for zone_type access.
+
+### Decisions made
+- Terminal clear placed before each new screen render, after player input — ensures current data always visible before clear.
+- "Press Enter to continue..." flow added to all transitions — player controls pacing, no information lost.
+- Alacritty separate terminal profile for Elder Path added to TODO — terminal color palette overrides Rich colors.
+- Game menu version display and Feedback option added to TODO — deferred to v1.0 polish.
+- Invalid game menu input (non-listed keys) showing game menu again added to TODO — deferred.
+
 ## 25 June 2026
 
 ### v0.6 completed

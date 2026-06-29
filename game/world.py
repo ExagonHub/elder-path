@@ -1,6 +1,7 @@
 import json
 import random
 from game.ui import display_room
+from game.ui import clear_terminal
 
 with open("data/rooms.json") as file:
     rooms = json.load(file)
@@ -24,10 +25,13 @@ def move(player):
         if full_direction in location["connections"]:
             player["previous_room"] = player["current_room"]
             player["current_room"] = location["connections"][full_direction]
+            clear_terminal()
             display_room(rooms[player["current_room"]])
             encounter(player)
         else:
             print("No path in direction.")
+            input("\nPress Enter to continue...")
+            clear_terminal()
     else:
         print("Invalid direction.")
 
@@ -68,6 +72,8 @@ def encounter(player):
             enemy_key = random.choice(location["enemy_pool"])
             with open("data/enemies.json") as file:
                 enemy = json.load(file)[enemy_key]
+                input("\nPress Enter to enter the dungeon...")
+                clear_terminal()
                 start_combat(player, enemy, location["zone_type"])
 
                 if location["chest"] is not None and location["chest"]["opened"] == False:
@@ -117,7 +123,11 @@ def open_chest(player, location):
                         break
                 
                 location["chest"]["opened"] = True
+                input("\nYou took the loot. Press Enter to continue...")
+                clear_terminal()
                 break
 
         elif choice == "2":
+            input("\nNo need for it then. Press Enter to continue...")
+            clear_terminal()
             break

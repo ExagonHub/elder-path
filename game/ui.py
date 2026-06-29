@@ -2,6 +2,7 @@ from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+import os
 
 damage_colors = {
     "physical": "bright_white",
@@ -190,6 +191,9 @@ def display_room(location):
     console = Console()
     panel = Panel(f"{location['name']} | {location['zone_type']}\nPaths: {', '.join(k.upper() for k in location['connections'].keys())}", title="Room Information", border_style="purple4")
     console.print(panel, justify="center")
+
+def clear_terminal():
+    os.system("cls" if os.name == "nt" else "clear") 
 
 
 

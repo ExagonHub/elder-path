@@ -8,6 +8,7 @@ from game.ui import display_play_menu
 from game.ui import display_game_menu
 from game.ui import display_equipment
 from game.world import move
+from game.ui import clear_terminal
 
 def menu():
     display_main_menu()
@@ -40,17 +41,30 @@ def main():
 
         if play_choice == "1":
             player = create_character()
+            clear_terminal()
+            print(f"\nWelcome, {player["name"]} the {player["class"]}!")
+            print(f"Your journey begins in Ember's Cross...")
+            input("\nPress Enter to continue...")
+            clear_terminal()
             # show_status(player)
             with open("data/enemies.json") as file:
                 enemies = json.load(file)
                 enemy = enemies["ENEMY_001"]
+            with open("data/rooms.json") as room_file:
+                rooms = json.load(room_file)
                 while True:
                     display_game_menu()
 
                     game_choice = input("Select: ")
 
                     if game_choice == "1":
-                        start_combat(player, enemy)
+                        current_room = rooms[player["current_room"]]
+                        if current_room["zone_type"] == "green":
+                            print("There are no enemies here.")
+                            input("Press Enter to continue...")
+                            clear_terminal()
+                        else:
+                            start_combat(player, enemy, current_room["zone_type"])
                     elif game_choice == "2":
                         display_equipment(player)
                     elif game_choice == "3":

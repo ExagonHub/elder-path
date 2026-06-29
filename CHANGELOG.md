@@ -3,6 +3,22 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.6.1] — 2026-06-29
+### Fixed
+- `clear_terminal()` added to `ui.py` — clears terminal before each new screen render
+- Terminal no longer grows downward during gameplay; each action renders a clean screen
+- `clear_terminal()` integrated into: combat loop, post-combat, enemy flee, player death, chest interactions, room transitions, green zone combat attempt
+- Direction connections in `rooms.json` corrected — ROOM_002, 003, 004, 005 had wrong return directions
+- `zone_type` now passed correctly to `start_combat()` from `main.py`
+- Green zone combat attempt now shows "There are no enemies here." instead of crashing
+- Dungeon entry now shows room info before combat begins
+
+### Added
+- Welcome screen after character creation — name, class, Enter to continue
+- "Press Enter to continue..." flow added to all major transitions
+- Revive message on player death — "A true warrior never gives up..."
+- Dungeon entry prompt — "Press Enter to enter the dungeon..."
+
 ## [v0.6] — 2026-06-25
 ### Added
 - `data/rooms.json` created — 7 rooms (1 village, 5 forest, 1 dungeon), zone types, connections, encounter chances
