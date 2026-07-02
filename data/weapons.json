@@ -54,6 +54,7 @@
         "type": "bow",
         "damage": 4,
         "quality": "common",
+        "price": 0,
         "slot": "two_hand",
         "allowed_classes": ["Assassin"]
     },
@@ -63,6 +64,7 @@
         "type": "staff",
         "damage": 3,
         "quality": "common",
+        "price": 0,
         "slot": "main_hand",
         "allowed_classes": ["Mage"]
     },
@@ -72,6 +74,7 @@
         "type": "staff",
         "damage": 7,
         "quality": "uncommon",
+        "price": 0,
         "slot": "two_hand",
         "allowed_classes": ["Mage"]
     },
@@ -81,6 +84,7 @@
         "type": "grimoire",
         "damage": 4,
         "quality": "common",
+        "price": 0,
         "slot": "main_hand",
         "allowed_classes": ["Mage"]
     }

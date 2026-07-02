@@ -1,0 +1,33 @@
+{
+    "NPC_001": {
+        "name": "Aldric",
+        "job": "weapon_seller",
+        "location": "ROOM_001",
+        "dialogue": "Welcome, traveler. I sell the finest weapons in Ember's Cross.",
+        "stock": ["WEAPON_001", "WEAPON_002", "WEAPON_003", "WEAPON_004", "WEAPON_005", "WEAPON_006", "WEAPON_007", "WEAPON_008", "WEAPON_009"]
+    },
+
+    "NPC_002": {
+        "name": "Maren",
+        "job": "armor_seller",
+        "location": "ROOM_001",
+        "dialogue": "Welcome, traveler. The finest armor in Ember's Cross, right here.",
+        "stock": ["ARMOR_001", "ARMOR_002", "ARMOR_003", "ARMOR_004", "ARMOR_005", "ARMOR_006"]
+    },
+
+    "NPC_003": {
+        "name": "Syra",
+        "job": "potion_seller",
+        "location": "ROOM_001",
+        "dialogue": "Greetings, traveler. I can offer you my best potions.",
+        "stock": ["POTION_001"]
+    },
+
+    "NPC_004": {
+        "name": "Dorin",
+        "job": "inn",
+        "location": "ROOM_001",
+        "dialogue": "Strength has its price — rest. Come, recover your strength.",
+        "price": 1
+    }
+}

@@ -5,7 +5,7 @@
         "defense": 2,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 1,
         "slot": "helmet",
         "allowed_classes": ["Warrior"]
     },
@@ -16,7 +16,7 @@
         "defense": 3,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 1,
         "slot": "chest",
         "allowed_classes": ["Warrior"]
     },

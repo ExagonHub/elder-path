@@ -3,6 +3,28 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.7] — 2026-07-02
+### Added
+- `data/npcs.json` created — 4 NPCs defined: Aldric (weapon_seller), Maren (armor_seller), Syra (potion_seller), Dorin (inn). Fields: name, job, location, stock/price, dialogue
+- `game/npc.py` created — NPC interaction module
+- `talk_to_npc(player, npc)` — routes to correct function based on npc job
+- `shop(player, npc)` — displays stock with name, quality, price; handles purchase flow, gold deduction, inventory placement
+- `rest(player, npc)` — restores HP/MP for gold; checks full HP/MP and insufficient gold
+- `display_more_menu(player, rooms)` added to `ui.py` — dynamic More menu; NPC's option visible only in green zones
+- `display_npc_list(npcs, rooms, player)` added to `ui.py` — lists NPCs present in current location
+- `display_game_menu()` updated — Quit Game moved to More menu, replaced with More option
+- `npcs.json` loaded in `main.py` — NPC data available throughout game loop
+- `price` field added to `weapons.json` and `armors.json` — placeholder value 0
+
+### Decisions made
+- NPC data in separate `npcs.json` — consistent with data/logic separation pattern
+- `stock` field stores item ID list — item details stay in their respective JSON files
+- `dialogue` field added to each NPC — avoids hardcoding strings in logic
+- More menu is zone-aware — options appear/disappear based on current zone_type
+- NPC list filters by `location` field — only shows NPCs in current room
+- Lore NPC (Guide) deferred to Faz 2 — lore presentation requires visuals
+- Price balancing deferred to v1.0 playtest
+
 ## [v0.6.1] — 2026-06-29
 ### Fixed
 - `clear_terminal()` added to `ui.py` — clears terminal before each new screen render

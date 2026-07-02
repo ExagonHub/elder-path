@@ -4,6 +4,40 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 02 July 2026
+
+### v0.7 completed
+
+- `data/npcs.json` created — 4 NPCs: Aldric (weapon_seller), Maren (armor_seller), Syra (potion_seller), Dorin (inn). Fields: name, job, location, stock/price, dialogue.
+- `game/npc.py` created — NPC interaction module.
+- `talk_to_npc(player, npc)` — routes to `shop()` or `rest()` based on npc job field.
+- `shop(player, npc)` — loads correct JSON file based on job, displays full stock list with name/quality/price, takes player selection, checks gold, deducts price, adds item to first empty inventory slot.
+- `rest(player, npc)` — checks if player is already at full HP/MP, checks gold, deducts price, restores HP and MP to max.
+- `display_more_menu(player, rooms)` added to `ui.py` — More menu with zone-aware options; NPC's visible only in green zones, Quit Game and Back always visible.
+- `display_npc_list(npcs, rooms, player)` added to `ui.py` — filters NPCs by current location, displays numbered list with Back option, returns choice and NPC list.
+- `display_game_menu()` updated — Quit Game removed, More added as 4th option.
+- `npcs.json` loaded in `main.py` alongside enemies and rooms.
+- More menu logic added to `main.py` — zone-aware routing, NPC selection, talk_to_npc call.
+- `price` field added to `weapons.json` and `armors.json` — placeholder value 0.
+
+### Decisions made
+- NPC data in separate `npcs.json` — consistent with data/logic separation pattern.
+- `stock` field stores item ID list — item details stay in their respective JSON files, no duplication.
+- `dialogue` field per NPC in JSON — dialogue strings stay in data layer, not hardcoded in logic.
+- More menu is zone-aware — options appear/disappear based on current zone_type, not hardcoded per location.
+- NPC list filtered by `location` field — only NPCs in current room are shown.
+- `purchased` flag used to break out of shop while loop after successful purchase — avoids nested break complexity.
+- Lore NPC (Guide) deferred to Faz 2 — lore presentation requires visuals to be effective.
+- Price balancing deferred to v1.0 playtest — all prices placeholder 0.
+
+### Known issues — to be fixed before v0.8
+- Inventory not visible from equipment screen — equip cannot be performed from equipment menu
+- Terminal not fully cleared after some NPC interactions
+- Player info missing from game menu screen
+- Inn menu does not exit automatically after resting — player must manually select Leave
+
+---
+
 ## 29 June 2026
 
 ### v0.6.1 completed
@@ -24,6 +58,8 @@ Development diary. Decisions, struggles, and progress notes.
 - Alacritty separate terminal profile for Elder Path added to TODO — terminal color palette overrides Rich colors.
 - Game menu version display and Feedback option added to TODO — deferred to v1.0 polish.
 - Invalid game menu input (non-listed keys) showing game menu again added to TODO — deferred.
+
+---
 
 ## 25 June 2026
 

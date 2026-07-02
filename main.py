@@ -9,6 +9,9 @@ from game.ui import display_game_menu
 from game.ui import display_equipment
 from game.world import move
 from game.ui import clear_terminal
+from game.ui import display_more_menu
+from game.ui import display_npc_list
+from game.npc import talk_to_npc
 
 def menu():
     display_main_menu()
@@ -52,25 +55,43 @@ def main():
                 enemy = enemies["ENEMY_001"]
             with open("data/rooms.json") as room_file:
                 rooms = json.load(room_file)
-                while True:
-                    display_game_menu()
+            with open("data/npcs.json") as npc_file:
+                npcs = json.load(npc_file)
+            while True:
+                display_game_menu()
 
-                    game_choice = input("Select: ")
+                game_choice = input("Select: ")
 
-                    if game_choice == "1":
-                        current_room = rooms[player["current_room"]]
-                        if current_room["zone_type"] == "green":
-                            print("There are no enemies here.")
-                            input("Press Enter to continue...")
-                            clear_terminal()
-                        else:
-                            start_combat(player, enemy, current_room["zone_type"])
-                    elif game_choice == "2":
-                        display_equipment(player)
-                    elif game_choice == "3":
-                        move(player)
-                    elif game_choice == "4":
-                        break
+                if game_choice == "1":
+                    current_room = rooms[player["current_room"]]
+                    if current_room["zone_type"] == "green":
+                        print("There are no enemies here.")
+                        input("Press Enter to continue...")
+                        clear_terminal()
+                    else:
+                        start_combat(player, enemy, current_room["zone_type"])
+                elif game_choice == "2":
+                    display_equipment(player)
+                elif game_choice == "3":
+                    move(player)
+                elif game_choice == "4":
+                    more_choice = display_more_menu(player, rooms)
+                    current_room = rooms[player["current_room"]]
+                    if current_room["zone_type"] == "green":
+                        if more_choice == "1":
+                            npc_choice, current_npcs = display_npc_list(npcs, rooms, player)
+                            if npc_choice != str(len(current_npcs) + 1):
+                                selected_npc = current_npcs[int(npc_choice) - 1]
+                                talk_to_npc(player, selected_npc)
+                        elif more_choice == "2":
+                            break
+                        elif more_choice == "3":
+                            pass
+                    else:
+                        if more_choice == "1":
+                            break
+                        elif more_choice == "2":
+                            pass
             
         elif play_choice == "2":
             pass

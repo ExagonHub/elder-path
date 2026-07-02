@@ -54,7 +54,7 @@ def create_character():
         "int": class_stats["int"],
         "vit": class_stats["vit"],
         "inventory": [None] * 18 ,
-        "gold": 0,
+        "gold": 10,
         "defense": 0,
         "magic_resistance": 0,
         "equipment": {

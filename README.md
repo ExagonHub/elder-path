@@ -68,7 +68,7 @@ elder-path/
 | v0.4 | Rich Terminal UI | ✅ Complete |
 | v0.5 | Equipment system | ✅ Complete |
 | v0.6 | World and exploration | ✅ Complete |
-| v0.7 | NPCs and economy | ⏳ Pending |
+| v0.7 | NPCs and economy | ✅ Complete |
 | v0.8 | Enemy variety | ⏳ Pending |
 | v0.9 | Boss system | ⏳ Pending |
 | v0.10 | Zone color system | ⏳ Pending |

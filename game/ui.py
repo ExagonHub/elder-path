@@ -182,7 +182,7 @@ def display_equipment(player):
 
 def display_game_menu():
     console = Console()
-    panel = Panel("[bright_magenta]1[/bright_magenta] - [bright_white]Combat[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Equipment[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Travel[/bright_white]\n[bright_magenta]4[/bright_magenta] - [bright_white]Quit Game[/bright_white]", title="Game Menu", border_style="purple4")
+    panel = Panel("[bright_magenta]1[/bright_magenta] - [bright_white]Combat[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Equipment[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Travel[/bright_white]\n[bright_magenta]4[/bright_magenta] - [bright_white]More[/bright_white]", title="Game Menu", border_style="purple4")
 
     console.print(panel, justify="center")
 
@@ -194,6 +194,40 @@ def display_room(location):
 
 def clear_terminal():
     os.system("cls" if os.name == "nt" else "clear") 
+
+
+def display_more_menu(player, rooms):
+    zone_type = rooms[player["current_room"]]["zone_type"]
+
+    if zone_type == "green":
+        menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]NPC's[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Quit Game[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Back[/bright_white]"
+    else:
+        menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]Quit Game[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Back[/bright_white]"
+
+    console = Console()
+    panel = Panel(menu_text, title="More", border_style="purple4")
+    console.print(panel, justify="center")
+    choice = input("Select: ")
+    return choice
+
+
+def display_npc_list(npcs, rooms, player):
+    current_npcs = []
+    for _, npc in npcs.items():
+        if npc["location"] == player["current_room"]:
+            current_npcs.append(npc)
+
+    console = Console()
+    menu_text = ""
+    for i, npc in enumerate(current_npcs):
+        menu_text += f"[bright_magenta]{i + 1}[/bright_magenta] - [bright_white]{npc['name']}[/bright_white]\n"
+    menu_text += f"[bright_magenta]{len(current_npcs) + 1}[/bright_magenta] - [bright_white]Back[/bright_white]"
+
+    panel = Panel(menu_text, title="NPC's", border_style="purple4")
+    console.print(panel, justify="center")
+
+    choice = input("Select: ")
+    return choice, current_npcs
 
 
 
