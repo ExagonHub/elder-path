@@ -1,7 +1,7 @@
 {
     "WEAPON_001": {
         "name": "Ironclad Sword",
-        "type": "sword",
+        "type": "weapon",
         "damage": 3,
         "quality": "common",
         "price": 0,
@@ -11,7 +11,7 @@
 
     "WEAPON_002": {
         "name": "Battleforged Longsword",
-        "type": "longsword",
+        "type": "weapon",
         "damage": 7,
         "quality": "uncommon",
         "price": 0,
@@ -21,7 +21,7 @@
 
     "WEAPON_003": {
         "name": "Ravager Axe",
-        "type": "axe",
+        "type": "weapon",
         "damage": 4,
         "quality": "common",
         "price": 0,
@@ -31,7 +31,7 @@
 
     "WEAPON_004": {
         "name": "Shadowfang Dagger",
-        "type": "dagger",
+        "type": "weapon",
         "damage": 3,
         "quality": "common",
         "price": 0,
@@ -41,7 +41,7 @@
 
     "WEAPON_005": {
         "name": "Whisper Dagger",
-        "type": "dagger",
+        "type": "weapon",
         "damage": 4,
         "quality": "uncommon",
         "price": 0,
@@ -51,7 +51,7 @@
 
     "WEAPON_006": {
         "name": "Hunters Bow",
-        "type": "bow",
+        "type": "weapon",
         "damage": 4,
         "quality": "common",
         "price": 0,
@@ -61,7 +61,7 @@
 
     "WEAPON_007": {
         "name": "Apprentice Staff",
-        "type": "staff",
+        "type": "weapon",
         "damage": 3,
         "quality": "common",
         "price": 0,
@@ -71,7 +71,7 @@
 
     "WEAPON_008": {
         "name": "Emberwood Staf",
-        "type": "staff",
+        "type": "weapon",
         "damage": 7,
         "quality": "uncommon",
         "price": 0,
@@ -81,7 +81,7 @@
 
     "WEAPON_009": {
         "name": "Cracked Grimoire",
-        "type": "grimoire",
+        "type": "weapon",
         "damage": 4,
         "quality": "common",
         "price": 0,

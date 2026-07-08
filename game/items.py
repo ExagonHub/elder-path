@@ -2,6 +2,7 @@ import random
 import json
 from game.ui import display_inventory
 from game.equipment import equip_item
+from game.ui import clear_terminal
 
 def show_inventory(player):
     for i, item in enumerate(player["inventory"]):
@@ -14,8 +15,9 @@ def show_inventory(player):
 def select_item(player):
     while True:
         display_inventory(player)
-        slot_choice = input("Select a slot: ")
+        slot_choice = input("Select a slot (0 to exit): ")
         if slot_choice == "0":
+            clear_terminal()
             return None, None
         try:
             slot = int(slot_choice)
@@ -28,10 +30,16 @@ def select_item(player):
 
 
 def use_item(player, index, item):
+    if item["type"] in ["weapon", "armor", "accessory"]:
+        print("This item cannot be used.")
+        return
+
     if item["effect"] == "heal":
         player["hp"] = min(player["hp"] + item["value"], player["max_hp"])
         player["inventory"][index] = None
         print(f"You used {item["name"]} and restored {item["value"]} HP.")
+
+
 
 
 def drop_item(player, index):
@@ -46,29 +54,32 @@ def item_action(player):
         return
 
     while True:
-        print("1 - Use")
-        print("2 - Drop")
-        print("3 - Back")
-
         if item["type"] in ["weapon", "armor", "accessory"]:
-            print("4 - Equip")
+            print("1 - Equip")
+            print("2 - Drop")
+            print("3 - Back")
+        else:
+            print("1 - Use")
+            print("2 - Drop")
+            print("3 - Back")
+
 
         action_choice = input("Select action: ")
 
-        if action_choice in ["1","2","3","4"]:
+        if item["type"] in ["weapon", "armor", "accessory"]:
             if action_choice == "1":
-                use_item()
+                equip_item(player, index, item)
             elif action_choice == "2":
-                drop_item()
+                drop_item(player, index)
             elif action_choice == "3":
                 break
-            elif action_choice == "4":
-                if item["type"] in ["weapon","armor","accessory"]:
-                    equip_item(player, index, item)
-                else:
-                    print("This item cannot be equipped.")
         else:
-            print("Invalid choice. Please enter 1, 2 or 3.")
+            if action_choice == "1":
+                use_item(player, index, item)
+            elif action_choice == "2":
+                drop_item(player, index)
+            elif action_choice == "3":
+                break
 
 
 def enemy_drop(player, enemy):

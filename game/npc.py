@@ -2,6 +2,7 @@ import json
 from rich.columns import Columns
 from rich.table import Table
 from rich.console import Console
+from game.ui import clear_terminal
 
 def talk_to_npc(player, npc):
     if npc["job"] in ["weapon_seller", "armor_seller", "potion_seller"]:
@@ -55,6 +56,8 @@ def shop(player, npc):
                             player["inventory"][i] = selected_item
                             print(f"You purchased {selected_item['name']}")
                             purchased = True
+                            input("\nPress Enter to continue...")
+                            clear_terminal()
                             break
                 else:
                     print(f"{npc['name']}: I'm sorry friend, you don't have enough gold. How about looking at something else ?")
@@ -62,6 +65,8 @@ def shop(player, npc):
                 break
         elif choice == "2":
             print(f"\n{npc['name']}: 'Safe travels, traveler. The road ahead is dark - but so is the one behind.'")
+            input("\nPress Enter to continue...")
+            clear_terminal()
             break
 
 
@@ -86,7 +91,12 @@ def rest(player, npc):
                     player["hp"] = player["max_hp"]
                     player["mp"] = player["max_mp"]
                     print("You rest well. Now go back to survive.")
+                    input("\nPress Enter to continue...")
+                    clear_terminal()
+                    break
 
         elif choice == "2":
             print(f"{npc['name']}: 'The path of the warrior is walked alone. Go well, traveler.'")
+            input("\nPress Enter to continue...")
+            clear_terminal()
             break

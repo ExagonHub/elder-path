@@ -4,6 +4,30 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 08 July 2026
+
+### v0.7.1 completed
+
+- `display_equipment_menu()` added to `ui.py` — shows Equip / Unequip / Back options after equipment screen.
+- `item_action()` restructured in `items.py` — weapon/armor/accessory shows Equip/Drop/Back; potion shows Use/Drop/Back. Previously all item types showed the same menu.
+- `use_item()` updated — now checks item type before applying effect; weapons, armor, accessories return "This item cannot be used." instead of crashing.
+- `weapons.json` item `type` field standardized to `"weapon"` — previously stored subtype (e.g. `"sword"`).
+- `show_status(player)` added to game menu loop in `main.py` — player info now visible at all times in game menu.
+- Version panel added to `display_main_menu()` in `ui.py` — italic, small panel bottom left showing current version.
+- `clear_terminal()` integrated into NPC shop and rest flows — purchase, rest, and leave transitions now render clean screen with Enter prompt.
+- Inn `rest()` function now breaks after successful rest — menu no longer loops after HP/MP restored.
+- Game menu invalid input now handled — shows error message and clears terminal instead of re-rendering menu silently.
+- `select_item()` input prompt updated to show `(0 to exit)` — player now knows how to exit inventory.
+- `clear_terminal()` added to `select_item()` slot 0 exit — terminal clears on inventory close.
+
+### Decisions made
+- `display_equipment_menu()` created as separate function — equipment screen stays display-only, menu logic separated.
+- Item type standardized to category (`"weapon"`, `"armor"`) not subtype (`"sword"`, `"bow"`) — subtype can be added as `subtype` field if needed in future versions.
+- Version number displayed on main menu only — not in game menu, consistent with most games.
+- `quality_colors` dict keys in `ui.py` standardized to lowercase — consistent with quality values in JSON files.
+
+---
+
 ## 02 July 2026
 
 ### v0.7 completed
@@ -30,7 +54,7 @@ Development diary. Decisions, struggles, and progress notes.
 - Lore NPC (Guide) deferred to Faz 2 — lore presentation requires visuals to be effective.
 - Price balancing deferred to v1.0 playtest — all prices placeholder 0.
 
-### Known issues — to be fixed before v0.8
+### Known issues — fixed in v0.7.1
 - Inventory not visible from equipment screen — equip cannot be performed from equipment menu
 - Terminal not fully cleared after some NPC interactions
 - Player info missing from game menu screen

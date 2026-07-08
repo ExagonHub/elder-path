@@ -3,6 +3,28 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.7.1] — 2026-07-08
+### Fixed
+- Equipment screen now shows inventory — equip can be performed from equipment menu
+- Inn menu now exits automatically after resting — no manual Leave required
+- `clear_terminal()` integrated into NPC interactions — shop purchase, rest, and leave transitions now render clean screen
+- Game menu invalid input now shows error message instead of re-rendering menu
+- Inventory exit now clears terminal — `clear_terminal()` added to slot 0 exit in `select_item()`
+
+### Added
+- `display_equipment_menu()` added to `ui.py` — Equip / Unequip / Back options after equipment screen
+- `item_action()` restructured — weapon/armor/accessory shows Equip/Drop/Back; potion shows Use/Drop/Back
+- `show_status(player)` added to game menu loop — player info visible at all times in game menu
+- Version panel added to main menu — displays current version (bottom left, italic)
+- `use_item()` now checks item type — weapons, armor, accessories cannot be used, only equipped
+- `weapons.json` item `type` field standardized to `"weapon"` — previously stored subtype (e.g. `"sword"`)
+- Inventory exit hint added — input prompt now shows `(0 to exit)`
+
+### Decisions made
+- `display_equipment_menu()` created as separate function — separation of concerns, equipment screen stays display-only
+- Item type standardized to category (`"weapon"`, `"armor"`) not subtype (`"sword"`, `"bow"`) — subtype can be added as `subtype` field if needed in future versions
+- Version number displayed on main menu only — not in game menu, consistent with most games
+
 ## [v0.7] — 2026-07-02
 ### Added
 - `data/npcs.json` created — 4 NPCs defined: Aldric (weapon_seller), Maren (armor_seller), Syra (potion_seller), Dorin (inn). Fields: name, job, location, stock/price, dialogue

@@ -12,6 +12,8 @@ from game.ui import clear_terminal
 from game.ui import display_more_menu
 from game.ui import display_npc_list
 from game.npc import talk_to_npc
+from game.ui import display_equipment_menu
+from game.items import item_action
 
 def menu():
     display_main_menu()
@@ -58,6 +60,7 @@ def main():
             with open("data/npcs.json") as npc_file:
                 npcs = json.load(npc_file)
             while True:
+                show_status(player)
                 display_game_menu()
 
                 game_choice = input("Select: ")
@@ -72,6 +75,13 @@ def main():
                         start_combat(player, enemy, current_room["zone_type"])
                 elif game_choice == "2":
                     display_equipment(player)
+                    eq_choice = display_equipment_menu()
+                    if eq_choice =="1":
+                        item_action(player)
+                    elif eq_choice == "2":
+                        pass
+                    elif eq_choice == "3":
+                        pass
                 elif game_choice == "3":
                     move(player)
                 elif game_choice == "4":
@@ -92,6 +102,11 @@ def main():
                             break
                         elif more_choice == "2":
                             pass
+
+                else:
+                    print("Invalid choice. Please enter 1, 2, 3 or 4.")
+                    input("\nPlease Enter to continue...")
+                    clear_terminal()
             
         elif play_choice == "2":
             pass
