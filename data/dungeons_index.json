@@ -1,0 +1,8 @@
+{
+    "DUNGEON_001": {
+        "file": "hollow_depths.json",
+        "name": "The Hollow Depths",
+        "entry_room": "ROOM_007",
+        "entry_droom": "DROOM_001"
+    }
+}

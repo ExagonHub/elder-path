@@ -4,6 +4,7 @@ from rich.panel import Panel
 from rich.table import Table
 import os
 
+
 damage_colors = {
     "physical": "bright_white",
     "fire": "bright_red",
@@ -47,10 +48,11 @@ def display_inventory(player):
 
     quality_colors = {
         "common": "bright_white",
-        "cncommon": "green",
+        "uncommon": "green",
         "rare": "cyan",
         "epic": "purple",
-        "legendary": "yellow"
+        "legendary": "yellow",
+        "godly": "gold1"
     }
 
 
@@ -170,13 +172,20 @@ def display_equipment(player):
     weapon_table.add_column("Slot Name")
     weapon_table.add_column("Item Name")
 
-    main_hand = player["equipment"]["main_hand"]["name"] if player["equipment"]["main_hand"] is not None else "[ empty ]"
+    two_hand = player["equipment"]["two_hand"]
 
-    weapon_table.add_row("Main hand", main_hand)
+    if two_hand is not None:
+        weapon_table.add_row("Main hand", "[ locked ]")
+        weapon_table.add_row("Off hand", "[ locked ]")
+    else:
+        main_hand = player["equipment"]["main_hand"]["name"] if player["equipment"]["main_hand"] is not None else "[ empty ]"
+        weapon_table.add_row("Main hand", main_hand)
 
-    off_hand = player["equipment"]["off_hand"]["name"] if player["equipment"]["off_hand"] is not None else "[ empty ]"
-    
-    weapon_table.add_row("Off hand", off_hand)
+        off_hand = player["equipment"]["off_hand"]["name"] if player["equipment"]["off_hand"] is not None else "[ empty ]"
+        weapon_table.add_row("Off hand", off_hand)
+
+    two_hand_name = two_hand["name"] if two_hand is not None else "[ empty ]"
+    weapon_table.add_row("Two-hand", two_hand_name)
 
     Columns([armor_table, char_table, weapon_table])
 
@@ -199,8 +208,9 @@ def clear_terminal():
     os.system("cls" if os.name == "nt" else "clear") 
 
 
-def display_more_menu(player, rooms):
-    zone_type = rooms[player["current_room"]]["zone_type"]
+def display_more_menu(player):
+    from game.world import get_location
+    zone_type = get_location(player)["zone_type"]
 
     if zone_type == "green":
         menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]NPC's[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Quit Game[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Back[/bright_white]"
@@ -214,7 +224,7 @@ def display_more_menu(player, rooms):
     return choice
 
 
-def display_npc_list(npcs, rooms, player):
+def display_npc_list(npcs, player):
     current_npcs = []
     for _, npc in npcs.items():
         if npc["location"] == player["current_room"]:

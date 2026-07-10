@@ -29,15 +29,15 @@ def equip_item(player, index, item):
 
     if slot == "two_hand":
         if player["equipment"]["off_hand"] is not None:
-            for i, slot in enumerate(player["inventory"]):
-                if slot is None:
+            for i, inv_item in enumerate(player["inventory"]):
+                if inv_item is None:
                     player["inventory"][i] = player["equipment"]["off_hand"]
                     break
             player["equipment"]["off_hand"] = None
 
     if player["equipment"][slot] is not None:
-        for i, slot in enumerate(player["inventory"]):
-            if slot is None:
+        for i, inv_item in enumerate(player["inventory"]):
+            if inv_item is None:
                 player["inventory"][i] = player["equipment"][slot]
                 break
         player["equipment"][slot] = None

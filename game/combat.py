@@ -95,29 +95,41 @@ def start_combat(player, enemy, zone_type):
             elif action_choice == "4":
                 item_action(player)
 
+            if enemy["hp"] > 0:
+                if zone_type != "red" and enemy.get("can_flee", True):
+                    if enemy["hp"] <= enemy["max_hp"] * 0.2:
+                        print(f"{enemy["name"]} is badly wounded and flees!")
+                        input("\nPress Enter to continue...")
+                        clear_terminal()
+                        break
 
-            if zone_type != "red":
-                if enemy["hp"] <= enemy["max_hp"] * 0.2:
-                    print(f"{enemy["name"]} is badly wounded and flees!")
-                    input("\nPress Enter to continue...")
-                    clear_terminal()
-                    break
+                
+                if stunned:
+                    print(f"{enemy["name"]} is stunned and cannot attack!")
+                    stunned = False
+                elif dodged:
+                    print(f"You successfully dodged the attack!")
+                    dodged = False
+                elif is_defending:
+                    player["hp"] -= enemy["base_damage"] // 2
+                    print(f"{enemy["name"]} dealt {enemy["base_damage"] // 2} damage to you! (Blocked)")
+                    is_defending = False
+                else:
+                    physical_damage = max(0, enemy["base_damage"] - get_total_stats(player)["defense"])
 
-            
-            if stunned:
-                print(f"{enemy["name"]} is stunned and cannot attack!")
-                stunned = False
-            elif dodged:
-                print(f"You successfully dodged the attack!")
-                dodged = False
-            elif is_defending:
-                player["hp"] -= enemy["base_damage"] // 2
-                print(f"{enemy["name"]} dealt {enemy["base_damage"] // 2} damage to you! (Blocked)")
-                is_defending = False
-            else:
-                actual_damage = max(0, enemy["base_damage"] - get_total_stats(player)["defense"])
-                player["hp"] -= actual_damage
-                print(f"{enemy["name"]} dealt {actual_damage} damage to you !")
+                    if enemy.get("element"):
+                        elemental_damage = max(enemy["elemental_damage"] - get_total_stats(player)["magic_resistance"], 1)
+                    else:
+                        elemental_damage = 0
+
+                    actual_damage = physical_damage + elemental_damage
+                    player["hp"] -= actual_damage
+
+                    if elemental_damage > 0:
+                        print(f"{enemy['name']} dealt {physical_damage} physical and {elemental_damage} {enemy['element']} damage to you!")
+                    else:
+                        print(f"{enemy['name']} dealt {actual_damage} damage to you!")
+
 
         else:
             print("Invalid choice. Please enter 1, 2, 3 or 4")

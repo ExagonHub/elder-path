@@ -77,18 +77,15 @@
     },
 
     "ROOM_007": {
-        "name": "The Hollow Depths",
-        "type": "dungeon",
-        "zone_type": "red",
-        "encounter_chance": 100,
+        "name": "The Hollow Depths Entrance",
+        "type": "forest",
+        "zone_type": "yellow",
+        "encounter_chance": 40,
         "enemy_pool": ["ENEMY_001", "ENEMY_002"],
         "connections": {
             "south": "ROOM_006"
         },
-        "chest": {
-            "loot_pool": ["WEAPON_001", "ARMOR_001"],
-            "quality": "common",
-            "opened": false
-        }
+        "dungeon_entrance": "DUNGEON_001",
+        "chest": null
     }
 }

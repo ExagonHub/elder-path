@@ -4,7 +4,7 @@
         "job": "weapon_seller",
         "location": "ROOM_001",
         "dialogue": "Welcome, traveler. I sell the finest weapons in Ember's Cross.",
-        "stock": ["WEAPON_001", "WEAPON_002", "WEAPON_003", "WEAPON_004", "WEAPON_005", "WEAPON_006", "WEAPON_007", "WEAPON_008", "WEAPON_009"]
+        "stock": ["WEAPON_000","WEAPON_001", "WEAPON_002", "WEAPON_003", "WEAPON_004", "WEAPON_005", "WEAPON_006", "WEAPON_007", "WEAPON_008", "WEAPON_009"]
     },
 
     "NPC_002": {

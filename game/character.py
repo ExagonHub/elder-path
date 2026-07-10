@@ -63,11 +63,15 @@ def create_character():
             "gloves": None,
             "boots": None,
             "main_hand": None,
+            "two_hand": None,
             "off_hand": None,
             "accessory": None
         },
         "current_room": "ROOM_001",
-        "previous_room": None
+        "previous_room": None,
+        "cleared_room": [],
+        "last_safe_room": "ROOM_001",
+        "current_dungeon": None
     }
 
     return player

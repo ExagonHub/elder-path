@@ -3,6 +3,54 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.8] — 2026-07-10
+### Added
+- New enemies added to `enemies.json`: Bandit, Giant Spider, Wild Boar (forest); Skeleton, Zombie, Ghoul, Shadow Creature (dungeon); Cursed Knight (elite/gatekeeper)
+- `dialogue` field added to all enemy entries — normal enemies null, elite/boss carry lore dialogue
+- `can_flee`, `element`, `elemental_damage` fields added to Cursed Knight entry
+- New loot items added to `items.json`: Boar Tusk, Spider Silk, Bandit's Coin Pouch, Bone Fragment, Rotten Flesh, Ghoul Claw, Shadow Essence, Cursed Knight's Emblem (`LOOT_ELITE_001`)
+- `data/dungeons/hollow_depths.json` created — first full dungeon, 10 rooms (entrance, crossroads network, buffer room, gatekeeper hall, boss room placeholder)
+- `data/dungeons_index.json` registry created — maps dungeon id to file path and entry points
+- `dungeon_entrance` field added to `rooms.json` (`ROOM_007`) — links overworld to dungeon system
+- `get_dungeon_data()` added to `world.py` — lazy-load + cache pattern for dungeon files
+- `get_location()` added to `world.py` — single source of truth for reading current room data, routes between `rooms.json` and dungeon files based on ID prefix
+- `get_room_data()` added to `world.py` — resolves arbitrary room data by id + dungeon context, used for pre-move checks
+- `move()` updated — ID prefix routing (`ROOM_` vs `DROOM_`), dungeon entry/exit handling, confirmation prompt before entering `fixed_enemy` rooms, lock mechanic blocking progress past unguarded gatekeeper/boss rooms until cleared
+- `encounter()` updated — `fixed_enemy` check triggers direct combat, bypassing normal encounter_chance roll
+- `cleared_rooms`, `last_safe_room`, `current_dungeon` fields added to player dict
+- `last_safe_room` auto-updates whenever player enters a green zone room
+- Elemental damage system — physical damage vs `defense`, elemental damage vs `magic_resistance`, calculated as separate components with a minimum damage floor
+- `can_flee` flag — elite/boss enemies never flee regardless of zone type
+- Player movement blocked during active `fixed_enemy` combat — cannot leave gatekeeper/boss room until enemy is defeated
+
+### Fixed
+- Combat menu ("1 - Combat") now dynamically selects enemy based on current room's `enemy_pool`/`fixed_enemy` — previously always fought a hardcoded Wolf regardless of location
+- Enemy flee check and enemy attack block now wrapped in `if enemy["hp"] > 0` — previously a lethal hit could be misread as "badly wounded, flees" due to check-order bug, denying XP/gold/loot
+- `death_penalty()` now resets HP/MP in red zone deaths (previously only deducted gold, leaving HP at negative values) and teleports player to `last_safe_room`, resetting `current_dungeon` — respawn is now fully functional
+- Equipment bug: `equip_item()` loop variable shadowed the outer `slot` variable, causing `KeyError: None` when re-equipping an already-equipped slot — loop variable renamed
+- `item_action()` now shows correct menu (Drop/Back) for loot-type items instead of Use/Drop/Back — previously caused `KeyError: 'effect'` when attempting to use a loot item
+- Drop action now properly exits the item menu after dropping (missing `break` added) — item no longer requires a second "Back" to register removal
+- `two_hand` equipment slot added to player dict — previously caused `KeyError: 'two_hand'` when equipping two-handed weapons
+- `display_equipment()` now shows a Two-hand row and locks Main hand / Off hand display when a two-handed weapon is equipped
+
+### Decisions made
+- Each dungeon stored in its own JSON file under `data/dungeons/`, rather than one shared `dungeon.json` — keeps future dungeons (v1.2) independently scalable, avoids a monolithic file as world content grows
+- `dungeons_index.json` acts as a lightweight registry rather than embedding dungeon metadata elsewhere — single lookup point for file path and entry rooms
+- Gatekeeper room requires explicit confirmation before entry and blocks flee once combat starts — reinforces "final trial before the boss" tension without adding a full player-flee system prematurely
+- Respawn point is the last visited green zone (`last_safe_room`), not a hardcoded village — scales naturally when new towns arrive in v1.2; simpler alternatives (checkpoint lists, hearthstone selection) deferred until multiple green zones exist
+- Elemental damage formula kept as a simple subtraction with a damage floor, not a diminishing-returns curve — avoids over-engineering before real itemization data (magic_resistance spread across armors) exists; v1.1 enchant system will build on top of this formula without needing to change it
+- Dungeon room network built from a manually diagrammed layout rather than procedural generation — three exploration paths converge at a single crossroads (Room 5) before a buffer room, avoiding an unsolvable "three doors into one room" direction conflict
+- Buffer room ("The Last Respite") added between the crossroads and the gatekeeper hall — gives players a lower-risk room to assess readiness before an unfleeable elite encounter
+
+### Known issues (deferred to v0.8.1 patch)
+- Level up: `max_hp`/`max_mp` increase by a flat amount instead of scaling proportionally with stats; XP overflow past `xp_to_next_level` is not properly reset/carried
+- `display_room()` Paths list doesn't include `dungeon_entrance` connections — valid dungeon entry direction isn't shown to the player
+- "Press Enter to enter the dungeon..." message appears on every red zone encounter, not just the actual dungeon entrance
+- More menu "Back" doesn't clear the terminal
+- Dropping an item returns player to Game Menu instead of the inventory list
+- General player flee action during combat is still missing (only the pre-combat Fight/Flee choice exists)
+- UI table widths don't dynamically adjust to terminal size
+
 ## [v0.7.1] — 2026-07-08
 ### Fixed
 - Equipment screen now shows inventory — equip can be performed from equipment menu

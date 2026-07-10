@@ -1,0 +1,143 @@
+{
+    "DROOM_001": {
+        "name": "Dungeon Entrance",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 40,
+        "enemy_pool": ["ENEMY_006"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "south": "DROOM_002"
+        }
+    },
+
+    "DROOM_002": {
+        "name": "Room 1",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 40,
+        "enemy_pool": ["ENEMY_006"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_001",
+            "west": "DROOM_003",
+            "east": "DROOM_004",
+            "south": "DROOM_006"
+        }
+    },
+
+    "DROOM_003": {
+        "name": "Room 2",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 50,
+        "enemy_pool": ["ENEMY_006", "ENEMY_007"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "east": "DROOM_002",
+            "south": "DROOM_005"
+        }
+    },
+
+    "DROOM_004": {
+        "name": "Room 3",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 50,
+        "enemy_pool": ["ENEMY_006", "ENEMY_007"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "west": "DROOM_002",
+            "south": "DROOM_007"
+        }
+    },
+
+    "DROOM_005": {
+        "name": "Room 4",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 60,
+        "enemy_pool": ["ENEMY_007", "ENEMY_008"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_003",
+            "east": "DROOM_006"
+        }
+    },
+
+    "DROOM_006": {
+        "name": "Room 5",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 70,
+        "enemy_pool": ["ENEMY_008", "ENEMY_009"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_002",
+            "west": "DROOM_005",
+            "east": "DROOM_007",
+            "south": "DROOM_008"
+        }
+    },
+
+    "DROOM_007": {
+        "name": "Room 6",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 60,
+        "enemy_pool": ["ENEMY_007", "ENEMY_008"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_004",
+            "west": "DROOM_006"
+        }
+    },
+
+    "DROOM_008": {
+        "name": "The Last Respite",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 30,
+        "enemy_pool": ["ENEMY_006"],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_006",
+            "south": "DROOM_009"
+        }
+    },
+
+    "DROOM_009": {
+        "name": "The Gatekeeper's Hall",
+        "type": "dungeon",
+        "zone_type": "red",
+        "encounter_chance": 0,
+        "enemy_pool": [],
+        "fixed_enemy": "ELITE_ENEMY_001",
+        "chest": null,
+        "connections": {
+            "north": "DROOM_006",
+            "south": "DROOM_010"
+        }
+    },
+
+    "DROOM_010": {
+        "name": "???",
+        "type": "dungeon",
+        "zone_type": "black",
+        "encounter_chance": 0,
+        "enemy_pool": [],
+        "fixed_enemy": null,
+        "chest": null,
+        "connections": {
+            "north": "DROOM_009"
+        }
+    }
+}

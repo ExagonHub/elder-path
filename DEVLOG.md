@@ -4,6 +4,56 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 10 July 2026
+
+### v0.8 completed
+
+Design phase started with six core decisions locked before any code was written: dungeon file architecture, enemy pool distribution, elemental damage foundation, flee rules, dialogue approach, and respawn system. Implementation followed the same order.
+
+- New enemies added to `enemies.json`: Bandit, Giant Spider, Wild Boar (forest pool); Skeleton, Zombie, Ghoul, Shadow Creature (dungeon pool); Cursed Knight (elite gatekeeper, `can_flee: false`, `element: "shadow"`, `elemental_damage` field).
+- `dialogue` field added to every enemy entry — null for normal enemies (mindless creatures, no lore reasoning needed), populated for Cursed Knight. Boss dialogue content deferred until v0.9.
+- New loot items added to `items.json` for each new enemy drop, priced and qualitied roughly by enemy strength (common forest drops up to epic for Cursed Knight's Emblem).
+- Dungeon architecture: after discovering a single shared `dungeon.json` wouldn't scale once multiple dungeons exist (v1.2), switched to one JSON file per dungeon under `data/dungeons/`, with `dungeons_index.json` as a small registry mapping dungeon id → file → entry rooms. `ROOM_007` converted from a dungeon-content room into a proper forest entrance room carrying a `dungeon_entrance` field.
+- Dungeon room layout for Hollow Depths hand-drawn by user as a diagram rather than designed purely in JSON — caught a real problem early: three converging paths into one gatekeeper room can't map cleanly onto four cardinal directions. Redesigned around a single crossroads (Room 5) with symmetric side rooms, avoiding the "three doors, one direction" conflict entirely.
+- Added a buffer room ("The Last Respite") between the crossroads and the gatekeeper hall — lower-risk room where player can retreat and prepare before the unfleeable elite fight, softening the "no going back" rule without undermining it.
+- `world.py`: `get_dungeon_data()` (lazy-load + cache per dungeon file), `get_location()` (single lookup point routing by ID prefix, `ROOM_` vs `DROOM_`), `get_room_data()` (resolves a target room before movement completes, used for pre-move checks).
+- `move()` rewritten to route through `get_location()`, handle dungeon entry/exit via `dungeon_entrance`, show a confirmation prompt before entering any `fixed_enemy` room ("no turning back"), and block movement out of an active gatekeeper/boss room until it's in `cleared_rooms`.
+- `encounter()` updated to check `fixed_enemy` before rolling `encounter_chance` — direct combat trigger for gatekeeper/boss rooms.
+- `cleared_rooms`, `last_safe_room`, `current_dungeon` added to player dict. `last_safe_room` updates automatically on every green zone entry.
+- Elemental damage: physical component vs `defense`, elemental component vs `magic_resistance`, calculated separately and summed, with a damage floor so `magic_resistance` can never fully negate elemental damage. Kept deliberately simple (no diminishing-returns curve) — enchant system in v1.1 will raise `magic_resistance` values without requiring the formula itself to change.
+
+### Testing phase — bugs found and fixed same day
+
+Comprehensive testing was deferred until all v0.8 components were written, then run in one long pass. Several bugs were pre-existing but only surfaced because v0.8 content finally exercised code paths nobody had touched before (loot items being "used", two-handed weapons being equipped, high burst damage against low-HP enemies).
+
+- Gatekeeper confirmation prompt worked immediately, but combat never actually started after confirming — `encounter()` had no concept of `fixed_enemy` at all. Added the missing check.
+- Combat menu's "1 - Combat" option turned out to always fight a hardcoded Wolf loaded once at game start, completely bypassing room-based enemy selection. Even inside the gatekeeper's own room, "Combat" fought a Wolf. Rewired to read the current room dynamically via `get_location()`.
+- Found via the test-only "Godly Sword" item (999,999 gold, absurd damage, added specifically to stress-test combat quickly): one-shotting an enemy triggered the flee message instead of victory. Root cause — flee threshold check and the enemy's counter-attack block weren't gated on the enemy still being alive, so a dead enemy could still "flee" and still hit back. Wrapped both in `if enemy["hp"] > 0`.
+- Respawn was effectively non-functional — dying in a red zone deducted gold but never restored HP (could go negative) and never moved the player anywhere. `death_penalty()` now resets HP/MP in all zones and teleports to `last_safe_room`, clearing `current_dungeon`.
+- Equipment: re-equipping an already-equipped slot crashed with `KeyError: None` — traced to a loop variable named `slot` shadowing the outer `slot` variable holding the actual equipment key. Renamed the loop variable.
+- Two-handed weapons crashed on equip (`KeyError: 'two_hand'`) — the slot was never added to the player's starting equipment dict. Added it, then found the equipment screen didn't display a Two-hand row at all, silently hiding whether the equip had worked. Added the row, with Main hand / Off hand shown as locked when a two-hander is equipped.
+- Loot items crashed when "used" (`KeyError: 'effect'`) — `item_action()` had only ever considered weapon/armor/accessory vs. "everything else is a potion". Added a dedicated loot branch (Drop/Back only). First pass forgot to route the Drop choice to `drop_item()`, then forgot to `break` out of the menu after dropping — both fixed.
+
+End-to-end verification: fought through the full Hollow Depths crossroads, confirmed enemy pools per room, triggered the gatekeeper warning, declined once, re-entered, fought and defeated Cursed Knight, confirmed XP/gold/loot awarded correctly and the room lock releasing after the kill.
+
+### Decisions made
+- Per-dungeon JSON files over a shared `dungeon.json` — avoids ID collisions and monolithic file growth as more dungeons are added in v1.2.
+- Respawn point is the last visited green zone rather than a hardcoded village — currently behaves identically to "always Ember's Cross" since only one green zone exists, but requires no rework once new towns are added.
+- Gatekeeper/boss rooms block player flee entirely once entered, reinforced by a pre-entry confirmation — deliberate tension choice. Balanced against red zone deaths only costing gold (no item loss, that's black zone only), keeping the "no turning back" rule meaningful without making failure punishing enough to sour the loop.
+- Elemental typing tied to enemy theme/name rather than a fixed Fire/Frost/Lightning set shared with Mage spells — Cursed Knight's "shadow" element fits a cursed gatekeeper better than forcing it into the existing spell trio.
+- No element-vs-element weakness matrix yet — only one elemental enemy exists, building a matrix now would be guessing without data. Revisit once v0.9/v1.2 add more elemental variety.
+
+### Known issues — deferred to v0.8.1 patch
+- Level up: `max_hp`/`max_mp` gains are still flat rather than proportional to stats; XP overflow past the level threshold isn't reset/carried correctly (shows values like `175/140` instead of resetting to the overflow amount).
+- `display_room()` Paths list doesn't account for `dungeon_entrance` — a valid dungeon entry direction isn't shown, player has to guess it exists.
+- "Press Enter to enter the dungeon..." message fires on every red zone encounter, not just the actual dungeon entrance — misleading wording, needs a neutral "Press Enter to continue..." instead.
+- More menu "Back" doesn't clear the terminal.
+- Dropping an item returns to Game Menu instead of back to the inventory list — annoying when dropping multiple items in a row.
+- General player flee-during-combat action still doesn't exist (only the pre-combat Fight/Flee choice at encounter time) — was in original v0.2 scope, never implemented, logged separately.
+- Rich table widths don't adjust to terminal size — noticeable now that the Weapons table gained a third row.
+
+---
+
 ## 08 July 2026
 
 ### v0.7.1 completed

@@ -87,5 +87,15 @@
         "price": 0,
         "slot": "main_hand",
         "allowed_classes": ["Mage"]
+    },
+
+    "WEAPON_000": {
+        "name": "God's Hand",
+        "type": "weapon",
+        "damage": 1000,
+        "quality": "godly",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Warrior"]
     }
 }

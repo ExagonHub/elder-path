@@ -17,5 +17,88 @@
         "drop": "LOOT_002",
         "gold_min": 20,
         "gold_max": 35
+    },
+
+    "ENEMY_003": {
+        "name": "Bandit",
+        "hp": 90,
+        "base_damage": 15,
+        "xp": 30,
+        "drop": "LOOT_003",
+        "gold_min": 30,
+        "gold_max": 50
+    },
+
+    "ENEMY_004": {
+        "name": "Giant Spider",
+        "hp": 60,
+        "base_damage": 16,
+        "xp": 28,
+        "drop": "LOOT_004",
+        "gold_min": 28,
+        "gold_max": 45
+    },
+
+    "ENEMY_005": {
+        "name": "Wild Boar",
+        "hp": 80,
+        "base_damage": 14,
+        "xp": 25,
+        "drop": "LOOT_005",
+        "gold_min": 25,
+        "gold_max": 40
+    },
+
+    "ENEMY_006": {
+        "name": "Skeleton",
+        "hp": 100,
+        "base_damage": 18,
+        "xp": 35,
+        "drop": "LOOT_006",
+        "gold_min": 40,
+        "gold_max": 65
+    },
+
+    "ENEMY_007": {
+        "name": "Zombie",
+        "hp": 130,
+        "base_damage": 15,
+        "xp": 38,
+        "drop": "LOOT_007",
+        "gold_min": 45,
+        "gold_max": 70
+    },
+
+    "ENEMY_008": {
+        "name": "Ghoul",
+        "hp": 90,
+        "base_damage": 22,
+        "xp": 42,
+        "drop": "LOOT_008",
+        "gold_min": 50,
+        "gold_max": 80
+    },
+
+    "ENEMY_009": {
+        "name": "Shadow Creature",
+        "hp": 110,
+        "base_damage": 20,
+        "xp": 45,
+        "drop": "LOOT_009",
+        "gold_min": 55,
+        "gold_max":90
+    },
+
+    "ELITE_ENEMY_001": {
+        "name": "Cursed Knight",
+        "hp": 150,
+        "base_damage": 35,
+        "xp": 65,
+        "drop": "LOOT_ELITE_001",
+        "gold_min": 150,
+        "gold_max": 200,
+        "can_flee": false,
+        "element": "shadow",
+        "elemental_damage": 15
     }
 }

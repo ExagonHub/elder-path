@@ -30,7 +30,7 @@ def select_item(player):
 
 
 def use_item(player, index, item):
-    if item["type"] in ["weapon", "armor", "accessory"]:
+    if item["type"] in ["weapon", "armor", "accessory", "loot"]:
         print("This item cannot be used.")
         return
 
@@ -58,6 +58,11 @@ def item_action(player):
             print("1 - Equip")
             print("2 - Drop")
             print("3 - Back")
+        
+        elif item["type"] == "loot":
+            print("1 - Drop")
+            print("2 - Back")
+        
         else:
             print("1 - Use")
             print("2 - Drop")
@@ -71,13 +76,21 @@ def item_action(player):
                 equip_item(player, index, item)
             elif action_choice == "2":
                 drop_item(player, index)
+                break
             elif action_choice == "3":
+                break
+        elif item["type"] == "loot":
+            if action_choice == "1":
+                drop_item(player, index)
+                break
+            elif action_choice == "2":
                 break
         else:
             if action_choice == "1":
                 use_item(player, index, item)
             elif action_choice == "2":
                 drop_item(player, index)
+                break
             elif action_choice == "3":
                 break
 

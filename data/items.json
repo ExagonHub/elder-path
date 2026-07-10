@@ -20,5 +20,62 @@
         "type": "loot",
         "price": 70,
         "quality": "common"
+    },
+
+    "LOOT_003": {
+        "name": "Bandit's Coin Pouch",
+        "type": "loot",
+        "price": 15,
+        "quality": "uncommon"
+    },
+
+    "LOOT_004": {
+        "name": "Spider Silk",
+        "type": "loot",
+        "price": 10,
+        "quality": "common"
+    },
+
+    "LOOT_005": {
+        "name": "Boar Task",
+        "type": "loot",
+        "price": 8,
+        "quality": "common"
+    },
+
+    "LOOT_006": {
+        "name": "Bone Fragment",
+        "type": "loot",
+        "price": 12,
+        "quality": "common"
+    },
+
+    "LOOT_007": {
+        "name": "Rotten Flesh",
+        "type": "loot",
+        "price": 10,
+        "quality": "common"
+    },
+
+    "LOOT_008": {
+        "name": "Ghoul Claw",
+        "type": "loot",
+        "price": 20,
+        "quality": "uncommon"
+    },
+
+    "LOOT_009": {
+        "name": "Shadow Essence",
+        "type": "loot",
+        "price": 35,
+        "quality": "rare"
+    },
+
+    "LOOT_ELITE_001": {
+        "name": "Cursed Knight's Emblem",
+        "type": "loot",
+        "price": 100,
+        "quality": "epic"
     }
+
 }
