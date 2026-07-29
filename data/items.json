@@ -76,6 +76,13 @@
         "type": "loot",
         "price": 100,
         "quality": "epic"
+    },
+
+    "CORE_001": {
+        "name": "Core of the Hollow Sovereign",
+        "type": "loot",
+        "quality": "epic",
+        "price": 0
     }
 
 }

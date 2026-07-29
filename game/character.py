@@ -69,7 +69,7 @@ def create_character():
         },
         "current_room": "ROOM_001",
         "previous_room": None,
-        "cleared_room": [],
+        "cleared_rooms": [],
         "last_safe_room": "ROOM_001",
         "current_dungeon": None
     }

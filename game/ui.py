@@ -89,7 +89,7 @@ def display_main_menu():
     panel_main_menu = Panel("[italic][#A0A0FF]Every beginning has its end.[/#A0A0FF][/italic]\n\n[bright_magenta]1[/bright_magenta] - [bright_white]Play[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Settings[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Quit[/bright_white]", title="E L D E R  P A T H", border_style="purple4")
     console.print(panel_main_menu, justify="center")
 
-    version_panel = Panel("[italic bright_white]v0.7.1[/italic bright_white]", border_style="purple4", width=10)
+    version_panel = Panel("[italic bright_white]v0.9.0[/italic bright_white]", border_style="purple4", width=10)
     console.print(version_panel, justify="left")
 
 

@@ -4,6 +4,50 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 30 July 2026
+
+### v0.9 completed
+
+Design phase covered seven roadmap items before any code was written: boss room architecture, phase-based mechanic, boss defense action, chest rewards, cleansed behavior, flee rules, and boss identity. All locked before implementation started.
+
+- `bosses.json` created as a separate file — boss entries carry fields (`phase_based`, `phase1_defense_chance`, `phase2`) that don't belong in `enemies.json` alongside standard enemy data. Same reasoning as the per-dungeon JSON decision in v0.8: each concern gets its own file.
+- The Hollow Sovereign defined as the first boss (`BOSS_001`) — name chosen to echo the dungeon's own name (Hollow Depths), creating an implicit connection without needing explicit lore text. Dialogue tone: cold, dismissive, not confrontational — a being that doesn't consider the player a real threat.
+- Phase system implemented via a `phase` local variable in `start_combat()` — Phase 2 triggers once at the 50% HP threshold, updates `base_damage` and `elemental_damage` in place, transition message shown exactly once. `phase_based` flag gates the whole system so normal enemies and the gatekeeper are completely unaffected.
+- Boss defense mechanic: Phase 1 is more cautious (30% block chance), Phase 2 is more aggressive (10% block, higher damage). Rationale: a powerful entity getting reckless when wounded fits the character better than getting more defensive. The "rage" archetype also makes Phase 2 feel genuinely dangerous rather than just numerically harder.
+- Gatekeeper reward redesigned — Cursed Knight now drops a class-specific weapon (Rare quality) via a new dict-based `drop` field. `enemy_drop()` updated to detect dict vs string format and route accordingly. Three options presented as a conscious choice from a chest, so the player picks intentionally rather than receiving a random drop.
+- Boss chest uses a new `type` field (`"normal"`, `"gatekeeper"`, `"boss"`) in `hollow_depths.json` — `open_chest()` reads this field and branches into three different behaviors. Boss chest delivers Core of the Hollow Sovereign + 2000 gold with no selection screen; gatekeeper chest presents a weapon choice list.
+- Core of the Hollow Sovereign (`CORE_001`) introduced — first enchantment crystal in the game. Passive for now, will be attachable to weapons via the blacksmith system in v1.1, granting stat bonuses and shadow element. Named with `CORE_` prefix to anticipate `CORE_002`, `CORE_003` from future bosses.
+- DROOM_010 fully populated — "The Sovereign's Chamber", zone_type black, fixed_enemy BOSS_001, chest configured.
+- DROOM_008 (The Last Respite) encounter_chance corrected to 0 — discovered during testing that the original value of 30 directly contradicted the room's purpose as a safe preparation space before the unfleeable gatekeeper fight.
+- Enemy drop order corrected in victory block — `enemy_drop()` now runs before `level_up()`, so drop and gold messages appear before the stat distribution screen instead of after.
+- `is_fixed` parameter added to `start_combat()` — previously every enemy kill appended the current room to `cleared_rooms`, including Wolf and Goblin rooms. Now only fixed_enemy encounters (gatekeeper, boss) update the cleared list.
+
+### Testing phase — bugs found and fixed same session
+
+- `cleared_rooms` field had a typo in `character.py` — written as `cleared_room` (missing "s"), causing KeyError on every movement lock check. Single character fix, caught immediately on first travel attempt.
+- Boss `phase_based` field had a typo in `bosses.json` — written as `phased_based` (extra "d"), so `enemy.get("phase_based")` always returned None and Phase 2 never triggered. HP dropped to 101 with no transition. Found by checking the JSON directly after ruling out max_hp calculation issues.
+- `enemy_drop()` crashed on boss entries with `drop: null` — function assumed drop field always contained a usable value. Added a None check at the top that handles gold drop and returns early.
+- `open_chest()` was never called after fixed_enemy combat — `encounter()` ran `start_combat()` and immediately returned without checking for a chest. One line added after `start_combat()` call.
+- Boss chest item loading had a typo — `item = items=item_key` instead of `item = items[item_key]`. Caught when opening the chest for the first time.
+
+### Decisions made
+- Gatekeeper drops a weapon, boss drops a core — two separate reward layers with different purposes. The weapon is functional (prepares the player for the boss fight and carries them into early v1.2 content). The core is a long-term investment (passive now, powers the enchant system in v1.1).
+- Boss chest contains no weapon — deliberate. The player should feel strong after the boss but not invincible. 2000 gold provides economic comfort for the next region without a direct power spike. Weapon upgrades come from new regions in v1.2.
+- Cleansed behavior kept minimal — boss room joins `cleared_rooms`, dungeon remains active as a grind space. Elder Path is not a Souls-like; the dungeon serving as a post-boss farming area is a feature, not a failure.
+- Phase 2 does not add new attack types — keeping combat mechanics consistent with what the player already knows. The difficulty spike comes from stat changes and reduced defense, not from learning an entirely new pattern. New attack types deferred to future bosses with more design space.
+
+### Known issues — deferred to v0.9.1 and v0.9.2 patches
+- Level up: max_hp/max_mp gains are flat rather than proportional to stats; XP overflow not handled, shows values like "175/140"
+- Several menu transitions missing clear_terminal() — More menu, inventory exit, equipment menu, NPC selection
+- "Press Enter to enter the dungeon..." message fires on every red zone encounter, not just actual dungeon entry
+- display_room() Paths list still doesn't show dungeon_entrance directions
+- Dropping an item returns to Game Menu instead of back to inventory
+- Boss/elite dialogue shown in plain text — should be bold red via Rich markup
+- Player flee-during-combat action still not implemented
+- UI table widths don't adjust to terminal size
+
+---
+
 ## 10 July 2026
 
 ### v0.8 completed
@@ -14,7 +58,7 @@ Design phase started with six core decisions locked before any code was written:
 - `dialogue` field added to every enemy entry — null for normal enemies (mindless creatures, no lore reasoning needed), populated for Cursed Knight. Boss dialogue content deferred until v0.9.
 - New loot items added to `items.json` for each new enemy drop, priced and qualitied roughly by enemy strength (common forest drops up to epic for Cursed Knight's Emblem).
 - Dungeon architecture: after discovering a single shared `dungeon.json` wouldn't scale once multiple dungeons exist (v1.2), switched to one JSON file per dungeon under `data/dungeons/`, with `dungeons_index.json` as a small registry mapping dungeon id → file → entry rooms. `ROOM_007` converted from a dungeon-content room into a proper forest entrance room carrying a `dungeon_entrance` field.
-- Dungeon room layout for Hollow Depths hand-drawn by user as a diagram rather than designed purely in JSON — caught a real problem early: three converging paths into one gatekeeper room can't map cleanly onto four cardinal directions. Redesigned around a single crossroads (Room 5) with symmetric side rooms, avoiding the "three doors, one direction" conflict entirely.
+- Dungeon room layout for Hollow Depths hand-drawn by user as a diagram rather than designed purely in JSON — caught a real problem early: three converging paths can't map cleanly onto four cardinal directions. Redesigned around a single crossroads (Room 5) with symmetric side rooms, avoiding the "three doors, one direction" conflict entirely.
 - Added a buffer room ("The Last Respite") between the crossroads and the gatekeeper hall — lower-risk room where player can retreat and prepare before the unfleeable elite fight, softening the "no going back" rule without undermining it.
 - `world.py`: `get_dungeon_data()` (lazy-load + cache per dungeon file), `get_location()` (single lookup point routing by ID prefix, `ROOM_` vs `DROOM_`), `get_room_data()` (resolves a target room before movement completes, used for pre-move checks).
 - `move()` rewritten to route through `get_location()`, handle dungeon entry/exit via `dungeon_entrance`, show a confirmation prompt before entering any `fixed_enemy` room ("no turning back"), and block movement out of an active gatekeeper/boss room until it's in `cleared_rooms`.
@@ -43,14 +87,11 @@ End-to-end verification: fought through the full Hollow Depths crossroads, confi
 - Elemental typing tied to enemy theme/name rather than a fixed Fire/Frost/Lightning set shared with Mage spells — Cursed Knight's "shadow" element fits a cursed gatekeeper better than forcing it into the existing spell trio.
 - No element-vs-element weakness matrix yet — only one elemental enemy exists, building a matrix now would be guessing without data. Revisit once v0.9/v1.2 add more elemental variety.
 
-### Known issues — deferred to v0.8.1 patch
-- Level up: `max_hp`/`max_mp` gains are still flat rather than proportional to stats; XP overflow past the level threshold isn't reset/carried correctly (shows values like `175/140` instead of resetting to the overflow amount).
-- `display_room()` Paths list doesn't account for `dungeon_entrance` — a valid dungeon entry direction isn't shown, player has to guess it exists.
-- "Press Enter to enter the dungeon..." message fires on every red zone encounter, not just the actual dungeon entrance — misleading wording, needs a neutral "Press Enter to continue..." instead.
-- More menu "Back" doesn't clear the terminal.
-- Dropping an item returns to Game Menu instead of back to the inventory list — annoying when dropping multiple items in a row.
-- General player flee-during-combat action still doesn't exist (only the pre-combat Fight/Flee choice at encounter time) — was in original v0.2 scope, never implemented, logged separately.
-- Rich table widths don't adjust to terminal size — noticeable now that the Weapons table gained a third row.
+### Known issues — fixed in v0.7.1
+- Inventory not visible from equipment screen — equip cannot be performed from equipment menu
+- Terminal not fully cleared after some NPC interactions
+- Player info missing from game menu screen
+- Inn menu does not exit automatically after resting — player must manually select Leave
 
 ---
 
@@ -204,7 +245,7 @@ End-to-end verification: fought through the full Hollow Depths crossroads, confi
 - `game/ui.py` created — all visual output centralized here. Separation of concerns: data in character/combat/items, visuals in ui.
 - `show_status(player, enemy=None)` — displays Player and Status panels side by side using Rich Columns. If enemy is provided, Enemy panel added as third column with dynamic HP bar.
 - `display_inventory(player)` — displays 18-slot inventory as a Rich Table with Slot, Item, Quality columns. Quality color-coded: Common (bright_white), Uncommon (green), Rare (cyan), Epic (purple), Legendary (yellow).
-- `display_level_up(player)` — displays level up panel when player levels up. Shows new level and +3 stat points message.
+- `display_level_up(player)` — displays level up notification panel when player levels up. Shows new level and +3 stat points message.
 - `display_combat_menu(player)` — displays styled combat action menu (Attack, Defence, Dodge, Use Item) in a Panel.
 - `display_attack_menu(player)` — single function handles all three class attack submenus. Shows correct options based on player class.
 - `display_main_menu()` — styled main menu panel centered on screen. Title: ELDER PATH, slogan: "Every beginning has its end."

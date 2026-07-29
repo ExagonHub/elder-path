@@ -1,0 +1,22 @@
+{
+    "BOSS_001": {
+        "name": "The Hollow Sovereign",
+        "hp": 220,
+        "base_damage": 38,
+        "xp": 400,
+        "drop": null,
+        "gold_min": 250,
+        "gold_max": 350,
+        "can_flee": false,
+        "element": "shadow",
+        "elemental_damage": 18,
+        "dialogue": "So the little thing survived the hollow halls. How... amusing. Let us see what remains of you.",
+        "phase_based": true,
+        "phase1_defense_chance": 0.10,
+        "phase2": {
+            "base_damage": 47,
+            "elemental_damage": 22,
+            "defence_chance": 0.30
+        }
+    }
+}

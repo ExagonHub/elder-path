@@ -3,6 +3,51 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.9] — 2026-07-30
+### Added
+- `data/bosses.json` created — separate file for boss entries, distinct from `enemies.json`; first entry: The Hollow Sovereign (`BOSS_001`)
+- The Hollow Sovereign — first dungeon boss, phase-based combat, shadow element, 220 HP, 400 XP reward
+- Phase system — boss transitions to Phase 2 at 50% HP; base_damage and elemental_damage increase by ~25%, defense_chance drops from 30% to 10% (rage behavior); transition message shown exactly once
+- Boss defense mechanic — bosses can absorb part of incoming damage based on `phase1_defense_chance` and `phase2.defense_chance` fields; `phase_based` flag gates this behavior, only activates for boss entries
+- `is_fixed` parameter added to `start_combat()` — gates `cleared_rooms` update to fixed_enemy encounters only, preventing normal enemy rooms from polluting the cleared list
+- Cursed Knight (gatekeeper) now drops a class-specific weapon on defeat: Cursed Knight's Blade (Warrior), Cursed Knight's Dagger (Assassin), Cursed Knight's Staff (Mage) — `drop` field in `enemies.json` now supports dict format for class-based drops; `enemy_drop()` updated to handle both string and dict formats
+- Gatekeeper chest added to DROOM_009 — 3 class-specific weapons presented as a conscious choice, player selects one, 350 gold included
+- Boss chest added to DROOM_010 — Core of the Hollow Sovereign (`CORE_001`) + 2000 gold; no weapon drop from boss itself
+- `CORE_001` (Core of the Hollow Sovereign) added to `items.json` — Epic loot, first enchantment crystal in the game; passive for now, will attach to weapons and grant stat bonuses + shadow element in v1.1
+- `open_chest()` extended with chest type system (`"normal"`, `"gatekeeper"`, `"boss"`) — each type has distinct behavior: gatekeeper presents weapon selection, boss delivers fixed loot without a choice prompt, normal chest behavior unchanged
+- Chest type-specific opening messages added to `open_chest()` — shown before the Open/Leave prompt
+- DROOM_010 fully populated — name: "The Sovereign's Chamber", zone_type: black, fixed_enemy: BOSS_001, chest configured
+- Boss room entry dialogue: *"So the little thing survived the hollow halls. How... amusing. Let us see what remains of you."*
+- DROOM_008 (The Last Respite) encounter_chance set to 0 — fully safe buffer room before the gatekeeper; previously 30, which conflicted with the room's intended purpose
+- WEAPON_010–012 added to `weapons.json` — Cursed Knight's Blade/Dagger/Staff, Rare quality, class-restricted
+- Enemy drop order corrected — `enemy_drop()` now runs before `level_up()` in the victory block; drop and gold messages now appear before the stat distribution screen
+
+### Fixed
+- `enemy_drop()` now handles `drop: null` gracefully — boss entries with no item drop no longer crash; gold drop still runs normally
+- `encounter()` now calls `open_chest()` after fixed_enemy combat if a chest is present and not yet opened — previously chest was never triggered after gatekeeper/boss fights
+- Boss BOSS_ prefix routing added to `encounter()` — `bosses.json` is now checked when `fixed_enemy` starts with `BOSS_`, preventing KeyError when loading boss data from `enemies.json`
+- `cleared_rooms` field corrected in `character.py` — was written as `cleared_room` (missing "s"), causing KeyError in movement lock checks
+- `player.get("cleared_rooms") or []` used throughout `world.py` — guards against None values and missing keys for backward compatibility with older character saves
+- Boss chest item loading fixed — `item = items=item_key` typo corrected to `item = items[item_key]`
+
+### Decisions made
+- Bosses stored in a separate `bosses.json` rather than `enemies.json` — boss entries carry unique fields (`phase_based`, `phase1_defense_chance`, `phase2`) that don't belong alongside standard enemy data; keeps both files clean and independently maintainable
+- Phase 1 more defensive (30%), Phase 2 more aggressive (10% defense, higher damage) — matches the "cornered, enraged" archetype; a boss becoming more cautious near death would contradict the lore identity of The Hollow Sovereign
+- Gatekeeper drops a class-appropriate weapon, boss drops a crafting core — two distinct reward layers: the gatekeeper prepares the player for the boss fight, the boss rewards long-term progression (enchant system, v1.1)
+- Core of the Hollow Sovereign named with `CORE_` prefix — anticipates a future system where each boss drops its own core (`CORE_002`, etc.), making the ID format self-documenting
+- Boss chest presents no weapon choice — the boss reward is intentionally not a direct power spike; player is strong enough to continue but must stay alert, avoiding the "I've won everything" feeling before new regions open in v1.2
+- 2000 gold from boss chest designed as a "next region comfort fund" — enough to settle in a new area without trivializing early economy; exact balance deferred to v1.0 playtest
+
+### Known issues (deferred to v0.9.1 and v0.9.2 patches)
+- Level up: `max_hp`/`max_mp` increase by a flat amount instead of scaling proportionally with stats; XP overflow past `xp_to_next_level` is not properly reset/carried
+- Several menu transitions missing `clear_terminal()` — More menu, inventory exit, equipment menu, NPC selection
+- "Press Enter to enter the dungeon..." message still appears on every red zone encounter, not just the actual dungeon entrance — misleading wording
+- `display_room()` Paths list doesn't include `dungeon_entrance` connections
+- Dropping an item returns player to Game Menu instead of the inventory list
+- Boss/elite dialogue shown in plain text — should be styled in bold red via Rich markup
+- General player flee action during combat still missing
+- UI table widths don't dynamically adjust to terminal size
+
 ## [v0.8] — 2026-07-10
 ### Added
 - New enemies added to `enemies.json`: Bandit, Giant Spider, Wild Boar (forest); Skeleton, Zombie, Ghoul, Shadow Creature (dungeon); Cursed Knight (elite/gatekeeper)
@@ -43,7 +88,7 @@ All notable changes to Elder Path will be documented here.
 - Buffer room ("The Last Respite") added between the crossroads and the gatekeeper hall — gives players a lower-risk room to assess readiness before an unfleeable elite encounter
 
 ### Known issues (deferred to v0.8.1 patch)
-- Level up: `max_hp`/`max_mp` increase by a flat amount instead of scaling proportionally with stats; XP overflow past `xp_to_next_level` is not properly reset/carried
+- Level up: `max_hp`/`max_hp` increase by a flat amount instead of scaling proportionally with stats; XP overflow past `xp_to_next_level` is not properly reset/carried
 - `display_room()` Paths list doesn't include `dungeon_entrance` connections — valid dungeon entry direction isn't shown to the player
 - "Press Enter to enter the dungeon..." message appears on every red zone encounter, not just the actual dungeon entrance
 - More menu "Back" doesn't clear the terminal

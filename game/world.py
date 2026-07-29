@@ -14,7 +14,7 @@ dungeon_cache = {}
 def move(player):
     location = get_location(player)
 
-    if location.get("fixed_enemy") and player["current_room"] not in player["cleared_rooms"]:
+    if location.get("fixed_enemy") and player["current_room"] not in (player.get("cleared_rooms") or []):
         print("\nYou must defeat what guard this place before you can move on.")
         input("\nPress Enter to continue...")
         clear_terminal()
@@ -89,12 +89,21 @@ def encounter(player):
     location = get_location(player)
 
     if location.get("fixed_enemy"):
-        with open("data/enemies.json") as file:
-            enemy = json.load(file)[location["fixed_enemy"]]
-        print(f"\n{enemy['name']} blocks your path!")
-        input("\nPress Enter to continue...")
-        clear_terminal()
-        start_combat(player, enemy, location["zone_type"])
+        enemy_id = location["fixed_enemy"]
+        if enemy_id.startswith("BOSS_"):
+            with open("data/bosses.json") as file:
+                enemy = json.load(file)[enemy_id]
+        else:
+            with open("data/enemies.json") as file:
+                enemy = json.load(file)[enemy_id]
+        if enemy.get("dialogue"):
+            print(f"\n{enemy['dialogue']}")
+            input("\nPress Enter to continue...")
+            clear_terminal()
+        start_combat(player, enemy, location["zone_type"], is_fixed=True)
+
+        if location.get("chest") and not location["chest"].get("opened"):
+            open_chest(player, location)
         return
 
     if random.randint(1,100) <= location["encounter_chance"]:
@@ -110,7 +119,7 @@ def encounter(player):
                     choice = input("Are you a man or a coward: ")
 
                     if choice == "1":
-                            start_combat(player, enemy, location["zone_type"])
+                            start_combat(player, enemy, location["zone_type"], is_fixed=True)
                             if location["chest"] is not None and location["chest"]["opened"] == False:
                                 print("A chest appears!")
                                 open_chest(player, location)
@@ -132,7 +141,7 @@ def encounter(player):
                 enemy = json.load(file)[enemy_key]
                 input("\nPress Enter to enter the dungeon...")
                 clear_terminal()
-                start_combat(player, enemy, location["zone_type"])
+                start_combat(player, enemy, location["zone_type"], is_fixed=True)
 
                 if location["chest"] is not None and location["chest"]["opened"] == False:
                     print("A chest appears!")
@@ -156,6 +165,14 @@ def death_penalty(player):
 
 
 def open_chest(player, location):
+    chest_type = location["chest"].get("type", "normal")
+
+    if chest_type == "boss":
+        print("\nA chest appears! The Hollow Sovereign's essence radiates from within.")
+    elif chest_type == "gatekeeper":
+        print("\nA chest appears! The Cursed Knight's weapons lay before you.")
+    else:
+        print("\nA chest appears!")
     while True:
         print("1 - Open")
         print("2 - Leave")
@@ -163,11 +180,50 @@ def open_chest(player, location):
         choice = input("What do you do: ")
 
         if choice == "1":
-            with open("data/weapons.json") as file:
-                weapons = json.load(file)
+            if chest_type == "boss":
+                with open("data/items.json") as file:
+                    items = json.load(file)
+                for item_key in location["chest"]["loot_pool"]:
+                    item = items[item_key]
+                    for i, slot in enumerate(player["inventory"]):
+                        if slot is None:
+                            player["inventory"][i] = item
+                            break
 
-            with open("data/armors.json") as file:
-                armors = json.load(file)
+                player["gold"] += location["chest"]["gold"]
+                print(f"\nYou obtained {item["name"]}!")
+                print(f"\nYou obtained {location["chest"]["gold"]} gold!")
+                location["chest"]["opened"] = True
+                input("\nPress Enter to continue...")
+                clear_terminal()
+                break
+
+            elif chest_type == "gatekeeper":
+                with open("data/weapons.json") as file:
+                    weapons = json.load(file)
+                for i, item_key in enumerate(location["chest"]["loot_pool"]):
+                    print(f"{i + 1} - {weapons[item_key]["name"]} ({weapons[item_key]['quality']})")
+                item_choice = input("Select item: ")
+                selected_key = location["chest"]["loot_pool"][int(item_choice) - 1]
+                selected_item = weapons[selected_key]
+                for i, slot in enumerate(player["inventory"]):
+                    if slot is None:
+                        player["inventory"][i] = selected_item
+                        break
+                player["gold"] += location["chest"]["gold"]
+                print(f"\nYou obtained {selected_item["name"]}!")
+                print(f"You obtained {location["chest"]["gold"]} gold!")
+                location["chest"]["opened"] = True
+                input("\nPress enter to continue...")
+                clear_terminal()
+                break
+
+            else:
+                with open("data/weapons.json") as file:
+                    weapons = json.load(file)
+
+                with open("data/armors.json") as file:
+                    armors = json.load(file)
 
                 loots = {**weapons, **armors}
 
@@ -184,12 +240,11 @@ def open_chest(player, location):
                     if slot is None:
                         player["inventory"][i] = selected_item
                         break
-                
-                location["chest"]["opened"] = True
-                input("\nYou took the loot. Press Enter to continue...")
-                clear_terminal()
-                break
-
+                    
+                    location["chest"]["opened"] = True
+                    input("\nYou took the loot. Press Enter to continue...")
+                    clear_terminal()
+                    break
         elif choice == "2":
             input("\nNo need for it then. Press Enter to continue...")
             clear_terminal()

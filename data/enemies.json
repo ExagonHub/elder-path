@@ -94,11 +94,16 @@
         "hp": 150,
         "base_damage": 35,
         "xp": 65,
-        "drop": "LOOT_ELITE_001",
+        "drop": {
+            "Warrior": "WEAPON_010",
+            "Assassin": "WEAPON_011",
+            "Mage": "WEAPON_012"
+        },
         "gold_min": 150,
         "gold_max": 200,
         "can_flee": false,
         "element": "shadow",
-        "elemental_damage": 15
+        "elemental_damage": 15,
+        "dialogue": null
     }
 }

@@ -96,17 +96,33 @@ def item_action(player):
 
 
 def enemy_drop(player, enemy):
+    if enemy.get("drop") is None:
+        gold_roll = random.random()
+        if gold_roll < 0.65:
+            gold = random.randint(enemy["gold_min"], enemy["gold_max"])
+            player["gold"] += gold
+            print(f"You found {gold} gold!")
+            return
+
     roll = random.random()
     if roll < 0.33:
-        item_id = enemy["drop"]
-        with open("data/items.json") as file:
-            items = json.load(file)
-            item = items[item_id]
-            for i, slot in enumerate(player["inventory"]):
-                if slot is None:
-                    player["inventory"][i] = item
-                    print(f"{enemy['name']} dropped [{item["quality"]}] {item["name"]}!")
-                    break
+        drop = enemy["drop"]
+        if isinstance(drop, dict):
+            item_id = drop.get(player["class"])
+        else:
+            item_id = drop
+        if item_id.startswith("WEAPON_"):
+            with open("data/weapons.json") as file:
+                data = json.load(file)
+        else:
+            with open("data/items.json") as file:
+                data = json.load(file)
+        item = data[item_id]
+        for i, slot in enumerate(player["inventory"]):
+            if slot is None:
+                player["inventory"][i] = item
+                print(f"{enemy['name']} dropped [{item["quality"]}] {item["name"]}!")
+                break
 
     gold_roll = random.random()
     if gold_roll < 0.65:

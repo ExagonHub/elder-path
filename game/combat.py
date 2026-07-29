@@ -25,13 +25,14 @@ attack_to_damage = {
     "lightning": "lightning"
 }
 
-def start_combat(player, enemy, zone_type):
+def start_combat(player, enemy, zone_type, is_fixed=False):
     enemy["max_hp"] = enemy["hp"]
 
 
     stunned = False
     is_defending = False
     dodged = False
+    phase = 1
     
     while (player["hp"] > 0) and (enemy["hp"] > 0):
         clear_terminal()
@@ -80,6 +81,12 @@ def start_combat(player, enemy, zone_type):
                     color = damage_colors[attack_to_damage[attack_type]]
                     console.print(f"[{color}]You dealt {damage} damage with {attack_type} to {enemy["name"]}![/{color}]")
 
+                if enemy.get("phase_based"):
+                    defense_chance = enemy.get("phase2", {}).get("defense_chance", 0) if phase == 2 else enemy.get("phase1_defense_chance", 0)
+                    if random.random() < defense_chance:
+                        enemy["hp"] += enemy["base_damage"] // 2
+                        print(f"{enemy["name"]} braces and absorbs part of the blow!")
+
             elif action_choice == "2":
                 is_defending = True
                 print("You brace for the attack!")
@@ -96,6 +103,14 @@ def start_combat(player, enemy, zone_type):
                 item_action(player)
 
             if enemy["hp"] > 0:
+                if enemy.get("phase_based") and phase == 1 and enemy["hp"] <= enemy["max_hp"] * 0.5:
+                    phase = 2
+                    print(f"\n{enemy["name"]}'s wounds turn to fury. The air grows heavy.")
+                    input("\nPress Enter to continue...")
+                    clear_terminal()
+                if phase == 2 and enemy.get("phase_based"):
+                    enemy["base_damage"] = enemy.get("phase2", {}).get("base_damage", enemy["base_damage"])
+                    enemy["elemental_damage"] = enemy.get("phase2", {}).get("elemental_damage", enemy["elemental_damage"])
                 if zone_type != "red" and enemy.get("can_flee", True):
                     if enemy["hp"] <= enemy["max_hp"] * 0.2:
                         print(f"{enemy["name"]} is badly wounded and flees!")
@@ -144,8 +159,10 @@ def start_combat(player, enemy, zone_type):
         print(f"Victory ! You defeated {enemy["name"]} !")
         player["xp"] += enemy["xp"]
         print(f"You gained {enemy["xp"]} XP !")
-        level_up(player)
         enemy_drop(player, enemy)
+        level_up(player)
+        if is_fixed and player["current_room"] not in player.get("cleared_rooms", []):
+            player.setdefault("cleared_rooms", []).append(player["current_room"])
         input("\nPress Enter to continue...")
         clear_terminal()
 

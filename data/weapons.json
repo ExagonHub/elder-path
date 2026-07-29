@@ -1,4 +1,14 @@
-{
+{   
+    "WEAPON_000": {
+        "name": "Test Weapon",
+        "type": "weapon",
+        "damage": 100,
+        "quality": "godly",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Warrior"]
+    },
+
     "WEAPON_001": {
         "name": "Ironclad Sword",
         "type": "weapon",
@@ -89,13 +99,35 @@
         "allowed_classes": ["Mage"]
     },
 
-    "WEAPON_000": {
-        "name": "God's Hand",
+    "WEAPON_010": {
+        "name": "Cursed Knight's Blade",
         "type": "weapon",
-        "damage": 1000,
-        "quality": "godly",
+        "damage": 11,
+        "quality": "rare",
         "price": 0,
         "slot": "main_hand",
         "allowed_classes": ["Warrior"]
+    },
+
+    "WEAPON_011": {
+        "name": "Cursed Knight's Dagger",
+        "type": "weapon",
+        "damage": 10,
+        "quality": "rare",
+        "price": 0,
+        "slot": "main_hand",
+        "allowed_classes": ["Assassin"]
+    },
+
+    "WEAPON_012": {
+        "name": "Cursed Knight's Staff",
+        "type": "weapon",
+        "damage": 10,
+        "quality": "rare",
+        "price": 0,
+        "slot": "two_hand",
+        "allowed_classes": ["Mage"]
     }
+
+
 }

@@ -104,7 +104,7 @@
         "name": "The Last Respite",
         "type": "dungeon",
         "zone_type": "red",
-        "encounter_chance": 30,
+        "encounter_chance": 0,
         "enemy_pool": ["ENEMY_006"],
         "fixed_enemy": null,
         "chest": null,
@@ -121,7 +121,12 @@
         "encounter_chance": 0,
         "enemy_pool": [],
         "fixed_enemy": "ELITE_ENEMY_001",
-        "chest": null,
+        "chest": {
+            "type": "gatekeeper",
+            "loot_pool": ["WEAPON_010", "WEAPON_011", "WEAPON_012"],
+            "gold": 350,
+            "opened": false
+        },
         "connections": {
             "north": "DROOM_006",
             "south": "DROOM_010"
@@ -129,13 +134,18 @@
     },
 
     "DROOM_010": {
-        "name": "???",
+        "name": "The Sovereign's Chamber",
         "type": "dungeon",
         "zone_type": "black",
         "encounter_chance": 0,
         "enemy_pool": [],
-        "fixed_enemy": null,
-        "chest": null,
+        "fixed_enemy": "BOSS_001",
+        "chest": {
+            "type": "boss",
+            "loot_pool": ["CORE_001"],
+            "gold": 2000,
+            "opened": false
+        },
         "connections": {
             "north": "DROOM_009"
         }

@@ -11,7 +11,7 @@
 | v0.6 | World and exploration | ✅ Complete |
 | v0.7 | NPCs and economy | ✅ Complete |
 | v0.8 | Enemy variety | ✅ Complete |
-| v0.9 | Boss system | ⏳ Pending |
+| v0.9 | Boss system | ✅ Complete |
 | v0.10 | Zone color system | ⏳ Pending |
 | v1.0 | Playtest, balance, polish - first release | ⏳ Pending |
 | v1.1 | Upgrades and bank | ⏳ Pending |
