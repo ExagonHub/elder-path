@@ -79,12 +79,18 @@ def create_character():
 
 def level_up(player):
     if player["xp"] >= player["xp_to_next_level"]:
-        player["hp"] += 10
-        player["max_hp"] += 10
-        player["mp"] += 5
-        player["max_mp"] += 5
+
+        hp_gain = {"Warrior": 15, "Assassin": 10, "Mage": 8}
+        mp_gain = {"Warrior": 3, "Assassin": 5, "Mage": 8}
+
+        player["max_hp"] += hp_gain[player["class"]]
+        player["max_mp"] += mp_gain[player["class"]]
+
+        player["hp"] = player["max_hp"]
+        player["mp"] = player["max_mp"]
         player["level"] += 1
         display_level_up(player)
+        player["xp"] -= player["xp_to_next_level"]
         player["xp_to_next_level"] += 50
 
 

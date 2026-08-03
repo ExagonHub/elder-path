@@ -49,7 +49,7 @@ def equip_item(player, index, item):
     print(f"{item["name"]} equipped.")
 
 
-def unqeuip_item(player, slot):
+def unequip_item(player, slot):
     item = player["equipment"][slot]
 
     if item is not None:

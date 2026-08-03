@@ -76,15 +76,22 @@ def item_action(player):
                 equip_item(player, index, item)
             elif action_choice == "2":
                 drop_item(player, index)
-                break
+                index, item = select_item(player)
+                if index is None:
+                    return
             elif action_choice == "3":
                 break
         elif item["type"] == "loot":
             if action_choice == "1":
                 drop_item(player, index)
-                break
+                index, item = select_item(player)
+                if index is None:
+                    return
             elif action_choice == "2":
-                break
+                drop_item(player, index)
+                index, item = select_item(player)
+                if index is None:
+                    return
         else:
             if action_choice == "1":
                 use_item(player, index, item)

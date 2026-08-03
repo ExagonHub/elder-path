@@ -78,9 +78,10 @@ def display_level_up(player):
     console.print(Columns([panel1, panel2, panel_level_up]))
 
 
-def display_combat_menu(player):
+def display_combat_menu(player, is_fixed=False):
     console = Console()
-    panel_combat = Panel(f"[#DA70D6]1[/#DA70D6] - Attack\n[#DA70D6]2[/#DA70D6] - Defence\n[#DA70D6]3[/#DA70D6] - Dodge\n[#DA70D6]4[/#DA70D6] - Use Item", title="Actions", border_style="purple4")
+    flee_option = "" if is_fixed else "\n[#DA70D6]5[/#DA70D6] - Flee"
+    panel_combat = Panel(f"[#DA70D6]1[/#DA70D6] - Attack\n[#DA70D6]2[/#DA70D6] - Defence\n[#DA70D6]3[/#DA70D6] - Dodge\n[#DA70D6]4[/#DA70D6] - Use Item{flee_option}", title="Actions", border_style="purple4")
     console.print(panel_combat, width=20)
 
 
@@ -201,7 +202,11 @@ def display_game_menu():
 
 def display_room(location):
     console = Console()
-    panel = Panel(f"{location['name']} | {location['zone_type']}\nPaths: {', '.join(k.upper() for k in location['connections'].keys())}", title="Room Information", border_style="purple4")
+    paths = list(k.upper() for k in location["connections"].keys())
+    if location.get("dungeon_entrance"):
+        paths.append("NORTH")
+    paths_str = ', '.join(paths)
+    panel = Panel(f"{location['name']} | {location['zone_type']}\nPaths: {paths_str}", title="Room Information", border_style="purple4")
     console.print(panel, justify="center")
 
 def clear_terminal():

@@ -3,6 +3,36 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v0.9.1] — 2026-08-03
+### Fixed
+- Level up now scales `max_hp`/`max_mp` by class instead of a flat amount — Warrior +15 HP / +3 MP, Assassin +10 HP / +5 MP, Mage +8 HP / +8 MP; full heal on level up preserved as intentional design
+- XP overflow now carries forward correctly — excess XP past `xp_to_next_level` is subtracted and applied to the next level instead of displaying inflated values like "175/140"
+- Player flee action added to combat — the general in-combat flee (missing since v0.2 scope) now works, DEX-based success chance (DEX * 5%); on success returns to `previous_room`, on failure takes an attack
+- Flee option correctly hidden in fixed_enemy rooms — gatekeeper/boss fights cannot be fled, gated via `display_combat_menu()` `is_fixed` parameter
+- Chest can no longer be opened after death — `start_combat()` now returns `"defeat"`/`"victory"` and the chest flow only runs on victory
+- Player HP no longer displays negative values — clamped with `max(0, player["hp"])`
+- Gatekeeper chest no longer fails to open after defeating the Cursed Knight (regression) — the gatekeeper fight was moved to `encounter()` in an earlier version, but the chest-opening logic was left behind in the `main.py` `game_choice == "1"` block, which the fixed_enemy flow no longer passes through; chest logic (`result == "victory"` check → `open_chest()` → `return`) relocated into `encounter()`'s fixed_enemy block where the fight actually resolves
+- Gatekeeper weapon no longer drops twice — the Cursed Knight's class-specific weapon was arriving from two sources at once (`enemy_drop()` class-based drop + gatekeeper chest selection); `drop` field removed from `ELITE_ENEMY_001` in `enemies.json`, weapon now comes exclusively from the chest choice as originally intended
+- Duplicate "A chest appears!" message removed — `open_chest()` already prints its own opening message; the redundant `print()` in `world.py` was cleaned up
+- "Press Enter to enter the dungeon..." message no longer fires on every red zone encounter — reworded to a neutral "Press Enter to continue..." inside the dungeon, shown only at the actual dungeon entrance
+- Dropping an item now returns to the inventory list instead of the Game Menu — enables consecutive drops
+- Boss/elite dialogue now styled in bold red via Rich markup instead of plain `print()`
+- `clear_terminal()` added to previously missing transitions — More menu back, inventory exit, equipment menu, NPC selection, item equip/back
+- Unequip now works correctly
+- Room info now displays on entering Ember's Cross and after dungeon encounters — `display_room()` added at the correct loop points
+- `display_room()` double-call verified fixed — no room triggers a duplicate room render
+- Cleared fixed_enemy room now shows "You have already defeated the guardian of this place." when Combat is selected
+- `encounter()` re-checks `cleared_rooms` so a cleared room can't re-trigger an encounter
+
+### Decisions made
+- HP/MP full heal on level up kept as intentional design, not treated as a bug
+- Chest-opening for fixed_enemy encounters belongs in `encounter()`, not `main.py` — since gatekeeper/boss fights auto-trigger on room entry rather than through the manual Combat menu, the reward flow must live where the combat resolves; the dead `main.py` fixed_enemy block is intentionally left in place for now ("if it works, don't touch it") and will be swept in a post-stable cleanup pass
+- Gatekeeper weapon sourced from the chest only, not a drop — the gatekeeper reward is meant to be a conscious 3-weapon choice, not a silent inventory addition; a single source keeps the reward intentional and avoids duplicates
+- Regression note logged: when combat is relocated between modules, its reward/chest logic must move with it — added to the mental checklist for future refactors
+- Room 5 (crossroads) shows no Fight/Flee prompt by design — red zone means direct combat; not a bug
+- Balance decisions deferred to v1.0 — gatekeeper/elite gold drop currently at 65% chance and general item drop at 33%; whether elite gold should be guaranteed and whether these rates are correct will be decided during v1.0 playtest/balance, alongside the full economy pass
+- ROOM_007 dungeon entry confirmed working via `south` — the earlier concern about `dungeon_entrance` not showing in Paths was a non-issue; entry direction is already listed
+
 ## [v0.9] — 2026-07-30
 ### Added
 - `data/bosses.json` created — separate file for boss entries, distinct from `enemies.json`; first entry: The Hollow Sovereign (`BOSS_001`)
@@ -256,5 +286,3 @@ All notable changes to Elder Path will be documented here.
 - Attack action with damage formula: base_damage + STR/DEX/INT bonus (50%)
 - XP gain on enemy death, level up system, 3-point stat distribution
 - Game ends on player death
-
-## [Unreleased]

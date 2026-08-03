@@ -57,7 +57,6 @@ def move(player):
             player["previous_room"] = player["current_room"]
             player["current_room"] = destination
             clear_terminal()
-            display_room(get_location(player))
             encounter(player)
             new_location = get_location(player)
             if new_location["zone_type"] == "green":
@@ -71,7 +70,7 @@ def move(player):
             player["previous_dungeon"] = player["current_room"]
             player["current_room"] = entry_droom
             clear_terminal()
-            display_room(get_location(player))
+            input("\nPress Enter to enter the dungeon...")
             encounter(player)
             new_location = get_location(player)
             if new_location["zone_type"] == "green":
@@ -87,8 +86,11 @@ def move(player):
 def encounter(player):
     from game.combat import start_combat
     location = get_location(player)
+    
 
     if location.get("fixed_enemy"):
+        if player["current_room"] in (player.get("cleared_rooms") or []):
+            return
         enemy_id = location["fixed_enemy"]
         if enemy_id.startswith("BOSS_"):
             with open("data/bosses.json") as file:
@@ -97,13 +99,15 @@ def encounter(player):
             with open("data/enemies.json") as file:
                 enemy = json.load(file)[enemy_id]
         if enemy.get("dialogue"):
-            print(f"\n{enemy['dialogue']}")
+            from rich.console import Console
+            console = Console()
+            console.print(f"\n[bold red]{enemy['dialogue']}[/bold red]")
             input("\nPress Enter to continue...")
             clear_terminal()
-        start_combat(player, enemy, location["zone_type"], is_fixed=True)
-
-        if location.get("chest") and not location["chest"].get("opened"):
-            open_chest(player, location)
+        result = start_combat(player, enemy, location["zone_type"], is_fixed=True)
+        if result == "victory":
+            if location.get("chest") is not None and not location["chest"].get("opened"):
+                open_chest(player, location)
         return
 
     if random.randint(1,100) <= location["encounter_chance"]:
@@ -119,11 +123,12 @@ def encounter(player):
                     choice = input("Are you a man or a coward: ")
 
                     if choice == "1":
-                            start_combat(player, enemy, location["zone_type"], is_fixed=True)
-                            if location["chest"] is not None and location["chest"]["opened"] == False:
-                                print("A chest appears!")
-                                open_chest(player, location)
+                            result = start_combat(player, enemy, location["zone_type"], is_fixed=False)
+                            if result == "victory":
+                                if location["chest"] is not None and not location["chest"]["opened"]:
+                                    open_chest(player, location)
                             break
+
 
                     elif choice == "2":
                         player["current_room"] = player["previous_room"]
@@ -139,13 +144,12 @@ def encounter(player):
             enemy_key = random.choice(location["enemy_pool"])
             with open("data/enemies.json") as file:
                 enemy = json.load(file)[enemy_key]
-                input("\nPress Enter to enter the dungeon...")
                 clear_terminal()
-                start_combat(player, enemy, location["zone_type"], is_fixed=True)
+                result = start_combat(player, enemy, location["zone_type"], is_fixed=False)
 
-                if location["chest"] is not None and location["chest"]["opened"] == False:
-                    print("A chest appears!")
-                    open_chest(player, location)
+                if result == "victory":
+                    if location["chest"] is not None and not location["chest"]["opened"]:
+                        open_chest(player, location)
 
 def death_penalty(player):
     location = get_location(player)
@@ -157,8 +161,8 @@ def death_penalty(player):
     elif location["zone_type"] == "red":
         player["gold"] -= int(player["gold"] * 0.3)
         print(f"You lost {int(player['gold'] * 0.3)} gold.")
-        player["hp"] = player["max_hp"] * 0.4
-        player["mp"] = player["max_mp"] * 0.3
+        player["hp"] = int(player["max_hp"] * 0.4)
+        player["mp"] = int(player["max_mp"] * 0.3)
 
     player["current_room"] = player["last_safe_room"]
     player["current_dungeon"] = None
@@ -264,7 +268,11 @@ def get_dungeon_data(dungeon_id):
 def get_location(player):
     room_id = player["current_room"]
     if room_id.startswith("DROOM_"):
-        dungeon_data = get_dungeon_data(player["current_dungeon"])
+        dungeon_id = player.get("current_dungeon")
+        if dungeon_id is None:
+            dungeon_id = "DUNGEON_001"
+            player["current_dungeon"] = dungeon_id
+        dungeon_data = get_dungeon_data(dungeon_id)
         return dungeon_data[room_id]
     else:
         return rooms[room_id]

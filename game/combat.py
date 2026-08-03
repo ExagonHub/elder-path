@@ -39,11 +39,11 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
         show_status(player, enemy)
 
 
-        display_combat_menu(player)
+        display_combat_menu(player, is_fixed=is_fixed)
 
         action_choice = input("Select your action: ")
 
-        if action_choice in ["1","2","3","4"]:
+        if action_choice in ["1","2","3","4","5"]:
             if action_choice == "1":
                 if player["class"] == "Warrior":
                     damage, attack_type = warrior_attack(player, enemy)
@@ -102,6 +102,21 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
             elif action_choice == "4":
                 item_action(player)
 
+            elif action_choice == "5" and not is_fixed:
+                flee_roll = random.random()
+                if flee_roll < player["dex"] * 0.05:
+                    print("You successfully fled!")
+                    input("\nPress Enter to continue...")
+                    clear_terminal()
+                    player["current_room"] = player["previous_room"]
+                    break
+                else:
+                    print("You failed to flee!")
+                    player["hp"] -= enemy["base_damage"]
+                    print(f"{enemy["name"]} strikes you as you turn to run! {enemy["base_damage"]} damamge!")
+                    input("\nPress Enter to continue...")
+                    clear_terminal()
+
             if enemy["hp"] > 0:
                 if enemy.get("phase_based") and phase == 1 and enemy["hp"] <= enemy["max_hp"] * 0.5:
                     phase = 2
@@ -140,6 +155,8 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
                     actual_damage = physical_damage + elemental_damage
                     player["hp"] -= actual_damage
 
+                    player["hp"] = max(0, player["hp"])
+
                     if elemental_damage > 0:
                         print(f"{enemy['name']} dealt {physical_damage} physical and {elemental_damage} {enemy['element']} damage to you!")
                     else:
@@ -154,8 +171,10 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
         death_penalty(player)
         input("\nA true warrior never gives up. Rise and continue your story... Press Enter to revive.")
         clear_terminal()
+        return "defeat"
+        
 
-    elif enemy["hp"] <= 0:
+    elif enemy["hp"] <= 0 and player["hp"] > 0:
         print(f"Victory ! You defeated {enemy["name"]} !")
         player["xp"] += enemy["xp"]
         print(f"You gained {enemy["xp"]} XP !")
@@ -165,6 +184,7 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
             player.setdefault("cleared_rooms", []).append(player["current_room"])
         input("\nPress Enter to continue...")
         clear_terminal()
+        return "victory"
 
 
 def warrior_attack(player, enemy):

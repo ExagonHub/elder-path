@@ -4,6 +4,58 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 03 August 2026
+
+### v0.9.1 completed — post-v0.9 fix patch
+
+A consolidated bug/UX patch bundling everything that was deferred out of v0.9 scope, plus a handful of issues that only surfaced during a fresh full playthrough test. No new version scope — every item here is a fix, a polish pass, or a design confirmation. Kept as a single patch (v0.9.1) rather than splitting into two.
+
+Approach this time: instead of fixing bugs the moment they appeared, ran a full playthrough from a fresh character and logged every issue first, then triaged and fixed them together. This kept version scope clean and avoided the trap of fixing one thing while breaking another mid-session.
+
+**Level up rework.** `max_hp`/`max_mp` gains were flat regardless of class, which made the three classes converge over time. Now scaled per class — Warrior +15 HP / +3 MP, Assassin +10 HP / +5 MP, Mage +8 HP / +8 MP — reinforcing class identity as the player levels. XP overflow was also broken: excess XP past the threshold displayed as inflated values like "175/140" instead of carrying forward. Now the excess is subtracted and applied to the next level cleanly. The full heal on level up was reviewed and kept — it's intentional design, a small reward for leveling, not a bug.
+
+**Player flee, finally.** The in-combat flee action was originally scoped for v0.2 and never actually implemented — only the pre-combat Fight/Flee choice existed. Added it now: DEX-based success chance (DEX * 5%), returns to `previous_room` on success, takes an attack on failure. Correctly hidden in fixed_enemy rooms via the `is_fixed` parameter — gatekeeper and boss fights remain unfleeable, as their lore identities demand.
+
+**The gatekeeper chest regression — the big one.** After defeating the Cursed Knight, the reward chest simply wasn't opening. The frustrating part: everything *looked* right. "Victory!" printed, XP was awarded, the drop message appeared. But no chest.
+
+Traced it step by step with temporary debug prints. `start_combat()` was genuinely returning `"victory"` — confirmed by a debug line right before the return. But the chest-opening code in `main.py`'s `game_choice == "1"` block never ran. The `DEBUG RESULT` print there never fired. That was the tell: the code path I was staring at wasn't the one being executed.
+
+The root cause was a regression from an earlier version. The gatekeeper fight had been moved into `encounter()` so it auto-triggers on room entry — but the chest-opening logic was left behind in the `main.py` manual-Combat block. Since the fixed_enemy flow no longer passes through that block at all, the chest code was dead on arrival. The fight resolved in `encounter()`, returned victory, and then... nothing, because the reward logic lived somewhere the flow never reached.
+
+Fix: relocated the chest logic (`result == "victory"` check → `open_chest()` → `return`) into `encounter()`'s fixed_enemy block, right where the fight actually resolves. Added a `return` so the function stops there instead of falling through into a second encounter roll. The dead `main.py` block is left in place for now — it's harmless, and "if it works, don't touch it" applies until the post-stable cleanup pass sweeps the whole codebase.
+
+The lesson logged for future refactors: when combat gets relocated between modules, its reward/chest logic has to move *with* it. This is exactly the kind of thing that breaks silently.
+
+**The double-source weapon.** While fixing the chest, noticed the Cursed Knight's weapon was arriving twice — once as a class-based `enemy_drop()`, and again from the gatekeeper chest selection. The chest choice was always the intended source (a conscious pick between three weapons), so the `drop` field was removed from `ELITE_ENEMY_001` in `enemies.json`. Weapon now comes from the chest only. Gold still drops normally since the gatekeeper's gold fields are untouched.
+
+**Smaller fixes in the same pass.**
+- Chest could be opened after death in some flows — `start_combat()` now returns `"defeat"`/`"victory"` and the chest flow only runs on victory.
+- Player HP could display negative values — clamped with `max(0, player["hp"])`.
+- Duplicate "A chest appears!" message — `open_chest()` already prints its own opening line, so the redundant `print()` was removed.
+- "Press Enter to enter the dungeon..." was firing on every red zone encounter inside the dungeon, not just at the entrance — reworded to a neutral "Press Enter to continue..." and scoped to the actual entrance.
+- Dropping an item bounced the player back to the Game Menu instead of the inventory list — now loops back to inventory for consecutive drops.
+- Boss/elite dialogue was plain text — now styled bold red via Rich markup, so it actually reads as a menacing line rather than a system message.
+- `clear_terminal()` added to several transitions that were missing it — More menu back, inventory exit, equipment menu, NPC selection, item equip/back.
+- Unequip fixed.
+- Room info now displays on entering Ember's Cross and after dungeon encounters.
+- Cleared fixed_enemy room now shows "You have already defeated the guardian of this place." when Combat is selected, and `encounter()` re-checks `cleared_rooms` so a cleared room can't re-trigger a fight.
+
+### Testing outcome
+Full playthrough verified end to end: fought through Hollow Depths, cleared the gatekeeper, confirmed the chest opens and the weapon choice works without duplicating, then defeated The Hollow Sovereign — both fixed_enemy encounters resolve cleanly through `encounter()` with chests opening correctly. `display_room()` double-call confirmed gone; no room double-renders.
+
+### Decisions made
+- Two deferred patches (originally planned as v0.9.1 + v0.9.2) merged into a single v0.9.1 — both were post-v0.9 bug/UX work with no new scope, no reason to split.
+- Full heal on level up kept as intentional design.
+- Room 5 (crossroads) showing no Fight/Flee prompt is by design — red zone means direct combat, not a bug.
+- ROOM_007 dungeon entry was never actually broken — it's reached via `south`, and the entry direction is already listed. The old "dungeon_entrance not shown in Paths" note was a non-issue.
+- All balance questions pushed to v1.0 — the gatekeeper/elite gold drop (currently 65% chance) and the general item drop rate (33%) aren't bugs, they're tuning decisions. Whether elite gold should be guaranteed and whether these rates feel right belong in the v1.0 playtest/balance pass alongside the full economy tuning, not in a fix patch.
+- The dead `main.py` fixed_enemy block stays until a post-stable cleanup — "if it works, don't touch it." The whole codebase gets a parts-cleanup pass once the game reaches a stable release.
+
+### Looking ahead — noted for v1.0
+- **Save/Load system.** Flagged as essential for v1.0. Without it, every session starts from scratch, which pushes players away instead of pulling them in. The architecture is already well-positioned: the entire game state lives in a single `player` dict of pure JSON-compatible types, so save is "dump the dict" and load is "read it back". The Load Game menu option already exists as a `pass` placeholder — only the internals need filling. Detailed design (per-character save files, manual save gated to green zones so the black-zone risk stays meaningful, `save_version` for forward compatibility) to be decided during v1.0.
+
+---
+
 ## 30 July 2026
 
 ### v0.9 completed
@@ -36,7 +88,7 @@ Design phase covered seven roadmap items before any code was written: boss room 
 - Cleansed behavior kept minimal — boss room joins `cleared_rooms`, dungeon remains active as a grind space. Elder Path is not a Souls-like; the dungeon serving as a post-boss farming area is a feature, not a failure.
 - Phase 2 does not add new attack types — keeping combat mechanics consistent with what the player already knows. The difficulty spike comes from stat changes and reduced defense, not from learning an entirely new pattern. New attack types deferred to future bosses with more design space.
 
-### Known issues — deferred to v0.9.1 and v0.9.2 patches
+### Known issues — deferred to v0.9.1 patch
 - Level up: max_hp/max_mp gains are flat rather than proportional to stats; XP overflow not handled, shows values like "175/140"
 - Several menu transitions missing clear_terminal() — More menu, inventory exit, equipment menu, NPC selection
 - "Press Enter to enter the dungeon..." message fires on every red zone encounter, not just actual dungeon entry
