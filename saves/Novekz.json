@@ -1,0 +1,126 @@
+{
+    "name": "Novekz",
+    "class": "Warrior",
+    "level": 5,
+    "xp": 12,
+    "xp_to_next_level": 290,
+    "max_hp": 180,
+    "hp": 0,
+    "max_mp": 12,
+    "mp": 12,
+    "base_damage": 10,
+    "str": 18,
+    "dex": 9,
+    "int": 3,
+    "vit": 8,
+    "inventory": [
+        null,
+        {
+            "name": "Battleforged Longsword",
+            "type": "weapon",
+            "damage": 7,
+            "quality": "uncommon",
+            "price": 100,
+            "slot": "two_hand",
+            "allowed_classes": [
+                "Warrior"
+            ]
+        },
+        null,
+        null,
+        null,
+        {
+            "name": "Health Potion",
+            "type": "consumable",
+            "effect": "heal",
+            "value": 50,
+            "price": 10,
+            "quality": "common"
+        },
+        {
+            "name": "Health Potion",
+            "type": "consumable",
+            "effect": "heal",
+            "value": 50,
+            "price": 10,
+            "quality": "common"
+        },
+        {
+            "name": "Health Potion",
+            "type": "consumable",
+            "effect": "heal",
+            "value": 50,
+            "price": 10,
+            "quality": "common"
+        },
+        null,
+        null,
+        null,
+        {
+            "name": "Ghoul Claw",
+            "type": "loot",
+            "price": 20,
+            "quality": "uncommon"
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "gold": 782,
+    "defense": 0,
+    "magic_resistance": 0,
+    "equipment": {
+        "helmet": {
+            "name": "Iron Helm",
+            "type": "helmet",
+            "defense": 2,
+            "magic_resistence": 1,
+            "quality": "common",
+            "price": 40,
+            "slot": "helmet",
+            "allowed_classes": [
+                "Warrior"
+            ]
+        },
+        "chest": {
+            "name": "Iron Armor",
+            "type": "body_armor",
+            "defense": 3,
+            "magic_resistence": 1,
+            "quality": "common",
+            "price": 60,
+            "slot": "chest",
+            "allowed_classes": [
+                "Warrior"
+            ]
+        },
+        "gloves": null,
+        "boots": null,
+        "main_hand": {
+            "name": "Cursed Knight's Blade",
+            "type": "weapon",
+            "damage": 11,
+            "quality": "rare",
+            "price": 0,
+            "slot": "main_hand",
+            "allowed_classes": [
+                "Warrior"
+            ]
+        },
+        "two_hand": null,
+        "off_hand": null,
+        "accessory": null
+    },
+    "current_room": "ROOM_001",
+    "previous_room": "DROOM_009",
+    "cleared_rooms": [
+        "DROOM_009"
+    ],
+    "last_safe_room": "ROOM_001",
+    "current_dungeon": null,
+    "save_version": "0.9.1",
+    "previous_dungeon": "ROOM_007"
+}

@@ -3,6 +3,46 @@ All notable changes to Elder Path will be documented here.
 
 ---
 
+## [v1.0] — 2026-08-09
+### Added
+- `game/save.py` created — save and load module; `save_game(player)` writes player dict to `saves/<name>.json`, `load_game()` lists saved characters and handles load/delete/back flow
+- Save & Quit option added to More menu — only visible in green zones; saves player state and exits cleanly
+- Load Game menu option now functional — lists saved characters with name, class, level, and current room; replaces the previous `pass` placeholder
+- Delete save option added to Load Game screen — `D` to enter delete flow, select save by number, confirm with Y/N
+- `saves/` directory created — per-character save files stored here
+
+### Fixed
+- Enemy flee now chance-based instead of guaranteed — normal enemies in yellow zone fled at 100% when HP dropped below 20%; now gated behind a 25% random roll (`random.random() < 0.25`), preventing complete denial of XP and gold in early game
+- Gold drop rate increased from 65% to 80% — early economy was too slow; players couldn't accumulate meaningful gold before their first dungeon run
+- `enemy_drop()` no longer crashes on enemies without a `drop` field — `enemy["drop"]` replaced with `enemy.get("drop")`; dungeon enemies (Skeleton, Zombie, Ghoul, etc.) had no drop field and caused `KeyError` on death
+- Armor items (`"helmet"`, `"body_armor"`) now correctly route to Equip menu instead of Use menu — `item_action()` type check list updated to include all armor type strings; previously fell through to `else` branch and called `use_item()`, causing `KeyError: 'effect'`
+
+### Changed
+- All weapon damage values rebalanced — previous values were below class `base_damage`, making equipped weapons weaker than bare hands; now scaled by quality tier with consistent inter-tier gaps (+8 per tier)
+  - Common Warrior: 18 / 20 — Uncommon: 28 — Rare: 36
+  - Common Assassin: 10 / 12 — Uncommon: 18 — Rare: 26
+  - Common Mage: 13 / 15 — Uncommon: 22 — Rare: 30
+- All item prices set from placeholder 0 to balanced values — previously every item was free (price: 0); now priced relative to Wolf gold yield (~15 gold average)
+  - Health Potion: 10 gold
+  - Inn rest: 20 gold
+  - Common weapons: 60–70 gold
+  - Uncommon weapons: 100 gold
+  - Common helmet: 40 gold / Common chest: 60 gold
+
+### Decisions made
+- Save gated to green zones only — black zone death penalty (lose all items) must remain meaningful; allowing save inside dungeons would let players bypass the risk by saving before every boss attempt; green zone save keeps the tension intact
+- Per-character save files (`saves/<name>.json`) over a single `savegame.json` — leaves the door open for multiple characters without any rework; file naming is self-documenting
+- `save_version` field written into every save — forward compatibility; new fields added in future versions can be read with `.get()` defaults without breaking existing saves
+- game_loop refactor deferred — New Game and Load Game both contain a duplicated `while True` game loop; extracting to a shared `game_loop()` function is the right long-term fix but is a structural change; deferred to a post-stable cleanup pass
+- v0.10 Zone Color System removed from roadmap — map color coding requires a visible map to be meaningful; both will be added together when the map feature is designed, likely v1.2 or later
+- Balance pass scoped to playability, not precision — drop rates, gold economy, and weapon damage were tuned to remove blockers (flee denial, gold starvation, weapons weaker than fists); fine-tuning deferred to v1.1+ when more content exists to test against
+
+### Known issues (deferred to post-v1.0 patches)
+- Save deleted or not found exits the game instead of returning to main menu — `load_game()` returns `None`, `main()` has no handler for this case; requires a small refactor of the main menu flow
+- NPC shop crashes on out-of-range input — `IndexError` when player enters a number higher than stock list length; needs `try/except` around `npc["stock"][int(choose) - 1]`
+- Cross-slot weapon swap incomplete — equipping a `main_hand` weapon while a `two_hand` weapon is equipped (or vice versa) does not return the old weapon to inventory; player must manually unequip first
+- `armors.json` type values not standardized — helmet uses `"helmet"`, chest uses `"body_armor"`; workaround added to `item_action()` but source data should be standardized to `"armor"` across all entries
+
 ## [v0.9.1] — 2026-08-03
 ### Fixed
 - Level up now scales `max_hp`/`max_mp` by class instead of a flat amount — Warrior +15 HP / +3 MP, Assassin +10 HP / +5 MP, Mage +8 HP / +8 MP; full heal on level up preserved as intentional design
@@ -49,7 +89,7 @@ All notable changes to Elder Path will be documented here.
 - DROOM_010 fully populated — name: "The Sovereign's Chamber", zone_type: black, fixed_enemy: BOSS_001, chest configured
 - Boss room entry dialogue: *"So the little thing survived the hollow halls. How... amusing. Let us see what remains of you."*
 - DROOM_008 (The Last Respite) encounter_chance set to 0 — fully safe buffer room before the gatekeeper; previously 30, which conflicted with the room's intended purpose
-- WEAPON_010–012 added to `weapons.json` — Cursed Knight's Blade/Dagger/Staff, Rare quality, class-restricted
+- WEAPON_010-012 added to `weapons.json` — Cursed Knight's Blade/Dagger/Staff, Rare quality, class-restricted
 - Enemy drop order corrected — `enemy_drop()` now runs before `level_up()` in the victory block; drop and gold messages now appear before the stat distribution screen
 
 ### Fixed
@@ -247,10 +287,10 @@ All notable changes to Elder Path will be documented here.
 - `display_main_menu()` — centered main menu panel with title and slogan
 - `display_play_menu()` — styled New Game / Load Game panel
 - `display_class_menu()` — class selection panel with per-class descriptions
-- Enemy HP bar — dynamic █░ bar, color changes by HP ratio (green/yellow/red)
+- Enemy HP bar — dynamic bar, color changes by HP ratio (green/yellow/red)
 - Damage color system — `damage_colors` dict maps damage types to colors
 - `attack_to_damage` dict in combat.py — maps attack types to damage type keys
-- Hasar mesajları renklendirildi — physical, fire, frost, lightning damage types
+- Hasar mesajlari renklendirildi — physical, fire, frost, lightning damage types
 - `max_mp` added to player dict, scales on level up
 
 ### Changed

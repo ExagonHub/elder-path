@@ -90,7 +90,7 @@ def display_main_menu():
     panel_main_menu = Panel("[italic][#A0A0FF]Every beginning has its end.[/#A0A0FF][/italic]\n\n[bright_magenta]1[/bright_magenta] - [bright_white]Play[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Settings[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Quit[/bright_white]", title="E L D E R  P A T H", border_style="purple4")
     console.print(panel_main_menu, justify="center")
 
-    version_panel = Panel("[italic bright_white]v0.9.0[/italic bright_white]", border_style="purple4", width=10)
+    version_panel = Panel("[italic bright_white]v1.0.0[/italic bright_white]", border_style="purple4", width=10)
     console.print(version_panel, justify="left")
 
 
@@ -218,7 +218,7 @@ def display_more_menu(player):
     zone_type = get_location(player)["zone_type"]
 
     if zone_type == "green":
-        menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]NPC's[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Quit Game[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Back[/bright_white]"
+        menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]NPC's[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Save & Quit[/bright_white]\n[bright_magenta]3[/bright_magenta] - [bright_white]Back[/bright_white]"
     else:
         menu_text = "[bright_magenta]1[/bright_magenta] - [bright_white]Quit Game[/bright_white]\n[bright_magenta]2[/bright_magenta] - [bright_white]Back[/bright_white]"
 

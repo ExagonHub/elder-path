@@ -127,7 +127,7 @@ def start_combat(player, enemy, zone_type, is_fixed=False):
                     enemy["base_damage"] = enemy.get("phase2", {}).get("base_damage", enemy["base_damage"])
                     enemy["elemental_damage"] = enemy.get("phase2", {}).get("elemental_damage", enemy["elemental_damage"])
                 if zone_type != "red" and enemy.get("can_flee", True):
-                    if enemy["hp"] <= enemy["max_hp"] * 0.2:
+                    if enemy["hp"] <= enemy["max_hp"] * 0.2 and random.random() < 0.25:
                         print(f"{enemy["name"]} is badly wounded and flees!")
                         input("\nPress Enter to continue...")
                         clear_terminal()

@@ -4,6 +4,54 @@ Development diary. Decisions, struggles, and progress notes.
 
 ---
 
+## 09 August 2026
+
+### v1.0 completed — playtest, balance, and save system
+
+The first proper release milestone. The goal coming in was simple: make the game actually playable from start to finish by someone who isn't the developer. That meant a save system, a working economy, and combat that doesn't actively punish the player for progressing.
+
+**Save system.** The architecture was always well-positioned for this — the entire game state already lived in a single `player` dict of pure JSON-compatible types. `save_game()` is literally `json.dump(player, file)`. `load_game()` lists saved files, lets the player pick one, reads it back, and drops them into the game loop from wherever they left off. Added a delete flow too — `D` from the load screen, select by number, confirm with Y/N.
+
+The main design decision was where to gate saving: green zones only. Black zone death means losing all items — that penalty has to stay real. If the player could save inside a dungeon, they'd just save before every boss attempt and reload on death, which completely hollows out the risk system. Green zone save keeps the tension where it belongs.
+
+Per-character files (`saves/<name>.json`) instead of a single savegame — no rework needed when multiple characters eventually exist, and the file naming is self-documenting. `save_version` field written into every save for forward compatibility; new fields added in future versions can be read with `.get()` defaults without breaking old saves.
+
+The Load Game menu option was already a `pass` placeholder — the UI shell existed, just needed the internals. That placeholder turned out to be well-placed; wiring it up was straightforward.
+
+One known gap: when a save is deleted or no saves exist, the game exits instead of returning to the main menu. `load_game()` returns `None` and `main()` has no handler for it. The game loop is duplicated between New Game and Load Game right now — `game_loop()` refactor would fix both issues cleanly, but it's a structural change. Deferred to a post-stable cleanup pass.
+
+**The balance pass.** Went in expecting to tune numbers. Found something more fundamental: weapons were weaker than bare hands. Every class's `base_damage` was higher than the damage value on the weapons available to them. Equipping anything made you worse. This was invisible as long as testing happened with the admin sword — the godly weapon masked the entire category of item values being wrong.
+
+Fixed across the board. Scaled by quality tier with a consistent +8 gap between tiers:
+- Common Warrior: 18/20 — Uncommon: 28 — Rare: 36
+- Common Assassin: 10/12 — Uncommon: 18 — Rare: 26
+- Common Mage: 13/15 — Uncommon: 22 — Rare: 30
+
+All prices were also sitting at the v0.5 placeholder of 0. Set relative to the Wolf gold yield (~15 gold average): Health Potion 10 gold, Inn 20 gold, common weapons 60–70 gold, uncommon weapons 100 gold, common armor 40/60 gold (helmet/chest). The progression arc this creates: kill 4-5 Wolves → buy a weapon, kill 6-7 more → rest at the inn, kill 15-20 total → upgrade to uncommon before the dungeon. That feels like the right pacing for a single-dungeon early game.
+
+**Enemy flee rate.** Normal enemies in yellow zone were fleeing at 100% when their HP dropped below 20%. The result: players couldn't reliably earn XP or gold because every fight that went well ended with the enemy running. Changed to a 25% flee chance at the HP threshold — enemies can still escape, but it's now a surprise rather than the guaranteed outcome. Gold drop rate also bumped from 65% to 80% to keep early economy flowing.
+
+**Bugs found during playtest.**
+
+Dungeon enemies (Skeleton, Zombie, Ghoul, etc.) had no `drop` field in `enemies.json`. `enemy_drop()` was doing `enemy["drop"]` instead of `enemy.get("drop")`, so every dungeon kill crashed with `KeyError`. One-character fix, but it would have blocked the entire dungeon.
+
+Armor items weren't routing to the Equip menu. `item_action()` checked `item["type"] in ["weapon", "armor", "accessory"]` — but helmets have `type: "helmet"` and chest pieces have `type: "body_armor"` in `armors.json`. Neither matched, so both fell through to the `else` branch and tried to call `use_item()`, which crashed on `KeyError: 'effect'`. Added `"helmet"` and `"body_armor"` to the type check list. The real fix is standardizing the source data to `"armor"` across all armor entries — noted for a cleanup pass.
+
+Cross-slot weapon swap is incomplete. Equipping a `main_hand` weapon while a `two_hand` is equipped doesn't return the old weapon to inventory. The `equip_item()` logic handles `two_hand → off_hand` cleanup but not `main_hand ↔ two_hand`. Players have to manually unequip first. Logged for a future fix patch.
+
+NPC shop crashes on out-of-range input — entering a number higher than the stock list throws `IndexError`. Needs a `try/except` around `npc["stock"][int(choose) - 1]`. Logged.
+
+### Testing outcome
+Full playthrough with Warrior: yellow zone grind → bought common sword and armor → upgraded to uncommon sword → entered Hollow Depths with 11 health potions → cleared Skeleton/Zombie/Ghoul rooms → defeated Cursed Knight, chose gatekeeper weapon → defeated The Hollow Sovereign. Save and load verified with equipment intact across sessions.
+
+### Decisions made
+- v0.10 Zone Color System removed from roadmap — map color coding requires a visible map to be meaningful; both features will come together when the map is designed, likely v1.2 or later
+- Balance pass scoped to playability, not precision — the goal was to remove hard blockers (flee denial, gold starvation, weapons weaker than fists); fine-tuning deferred until more content exists to test against
+- game_loop refactor deferred — structural change, post-stable cleanup pass
+- `armors.json` type standardization deferred — workaround in place, doesn't affect gameplay
+
+---
+
 ## 03 August 2026
 
 ### v0.9.1 completed — post-v0.9 fix patch
@@ -109,7 +157,7 @@ Design phase started with six core decisions locked before any code was written:
 - New enemies added to `enemies.json`: Bandit, Giant Spider, Wild Boar (forest pool); Skeleton, Zombie, Ghoul, Shadow Creature (dungeon pool); Cursed Knight (elite gatekeeper, `can_flee: false`, `element: "shadow"`, `elemental_damage` field).
 - `dialogue` field added to every enemy entry — null for normal enemies (mindless creatures, no lore reasoning needed), populated for Cursed Knight. Boss dialogue content deferred until v0.9.
 - New loot items added to `items.json` for each new enemy drop, priced and qualitied roughly by enemy strength (common forest drops up to epic for Cursed Knight's Emblem).
-- Dungeon architecture: after discovering a single shared `dungeon.json` wouldn't scale once multiple dungeons exist (v1.2), switched to one JSON file per dungeon under `data/dungeons/`, with `dungeons_index.json` as a small registry mapping dungeon id → file → entry rooms. `ROOM_007` converted from a dungeon-content room into a proper forest entrance room carrying a `dungeon_entrance` field.
+- Dungeon architecture: after discovering a single shared `dungeon.json` wouldn't scale once multiple dungeons exist (v1.2), switched to one JSON file per dungeon under `data/dungeons/`, with `dungeons_index.json` as a small registry mapping dungeon id to file to entry rooms. `ROOM_007` converted from a dungeon-content room into a proper forest entrance room carrying a `dungeon_entrance` field.
 - Dungeon room layout for Hollow Depths hand-drawn by user as a diagram rather than designed purely in JSON — caught a real problem early: three converging paths can't map cleanly onto four cardinal directions. Redesigned around a single crossroads (Room 5) with symmetric side rooms, avoiding the "three doors, one direction" conflict entirely.
 - Added a buffer room ("The Last Respite") between the crossroads and the gatekeeper hall — lower-risk room where player can retreat and prepare before the unfleeable elite fight, softening the "no going back" rule without undermining it.
 - `world.py`: `get_dungeon_data()` (lazy-load + cache per dungeon file), `get_location()` (single lookup point routing by ID prefix, `ROOM_` vs `DROOM_`), `get_room_data()` (resolves a target room before movement completes, used for pre-move checks).
@@ -305,8 +353,8 @@ End-to-end verification: fought through the full Hollow Depths crossroads, confi
 - `display_class_menu()` — styled class selection panel with short description per class.
 - `damage_colors` dict added globally in ui.py — maps damage types to colors (physical, fire, frost, lightning, critical, poison, shadow).
 - `attack_to_damage` dict added in combat.py — maps attack_type strings to damage type keys.
-- Hasar mesajları renklendirildi — her saldırı tipine göre ilgili renk uygulandı.
-- Enemy HP bar implemented manually using █ and ░ characters. Color changes dynamically: green above 50%, yellow above 25%, red below 25%.
+- Hasar mesajlari renklendirildi — her saldiri tipine gore ilgili renk uygulandi.
+- Enemy HP bar implemented manually using block characters. Color changes dynamically: green above 50%, yellow above 25%, red below 25%.
 - `select_item()` updated — input 0 returns None, None to allow exiting inventory.
 - `item_action()` updated — checks for None return from select_item, exits cleanly.
 - `max_mp` added to player dict for consistency with max_hp.

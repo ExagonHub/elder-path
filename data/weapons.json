@@ -1,20 +1,11 @@
-{   
-    "WEAPON_000": {
-        "name": "Test Weapon",
-        "type": "weapon",
-        "damage": 100,
-        "quality": "godly",
-        "price": 0,
-        "slot": "main_hand",
-        "allowed_classes": ["Warrior"]
-    },
+{
 
     "WEAPON_001": {
         "name": "Ironclad Sword",
         "type": "weapon",
-        "damage": 3,
+        "damage": 18,
         "quality": "common",
-        "price": 0,
+        "price": 60,
         "slot": "main_hand",
         "allowed_classes": ["Warrior"]
     },
@@ -22,9 +13,9 @@
     "WEAPON_002": {
         "name": "Battleforged Longsword",
         "type": "weapon",
-        "damage": 7,
+        "damage": 28,
         "quality": "uncommon",
-        "price": 0,
+        "price": 100,
         "slot": "two_hand",
         "allowed_classes": ["Warrior"]
     },
@@ -32,9 +23,9 @@
     "WEAPON_003": {
         "name": "Ravager Axe",
         "type": "weapon",
-        "damage": 4,
+        "damage": 20,
         "quality": "common",
-        "price": 0,
+        "price": 70,
         "slot": "main_hand",
         "allowed_classes": ["Warrior"]
     },
@@ -42,9 +33,9 @@
     "WEAPON_004": {
         "name": "Shadowfang Dagger",
         "type": "weapon",
-        "damage": 3,
+        "damage": 10,
         "quality": "common",
-        "price": 0,
+        "price": 60,
         "slot": "main_hand",
         "allowed_classes": ["Assassin"]
     },
@@ -52,9 +43,9 @@
     "WEAPON_005": {
         "name": "Whisper Dagger",
         "type": "weapon",
-        "damage": 4,
+        "damage": 18,
         "quality": "uncommon",
-        "price": 0,
+        "price": 100,
         "slot": "main_hand",
         "allowed_classes": ["Assassin"]
     },
@@ -62,9 +53,9 @@
     "WEAPON_006": {
         "name": "Hunters Bow",
         "type": "weapon",
-        "damage": 4,
+        "damage": 12,
         "quality": "common",
-        "price": 0,
+        "price": 70,
         "slot": "two_hand",
         "allowed_classes": ["Assassin"]
     },
@@ -72,9 +63,9 @@
     "WEAPON_007": {
         "name": "Apprentice Staff",
         "type": "weapon",
-        "damage": 3,
+        "damage": 13,
         "quality": "common",
-        "price": 0,
+        "price": 60,
         "slot": "main_hand",
         "allowed_classes": ["Mage"]
     },
@@ -82,9 +73,9 @@
     "WEAPON_008": {
         "name": "Emberwood Staf",
         "type": "weapon",
-        "damage": 7,
+        "damage": 22,
         "quality": "uncommon",
-        "price": 0,
+        "price": 100,
         "slot": "two_hand",
         "allowed_classes": ["Mage"]
     },
@@ -92,9 +83,9 @@
     "WEAPON_009": {
         "name": "Cracked Grimoire",
         "type": "weapon",
-        "damage": 4,
+        "damage": 15,
         "quality": "common",
-        "price": 0,
+        "price": 70,
         "slot": "main_hand",
         "allowed_classes": ["Mage"]
     },
@@ -102,7 +93,7 @@
     "WEAPON_010": {
         "name": "Cursed Knight's Blade",
         "type": "weapon",
-        "damage": 11,
+        "damage": 36,
         "quality": "rare",
         "price": 0,
         "slot": "main_hand",
@@ -112,7 +103,7 @@
     "WEAPON_011": {
         "name": "Cursed Knight's Dagger",
         "type": "weapon",
-        "damage": 10,
+        "damage": 26,
         "quality": "rare",
         "price": 0,
         "slot": "main_hand",
@@ -122,7 +113,7 @@
     "WEAPON_012": {
         "name": "Cursed Knight's Staff",
         "type": "weapon",
-        "damage": 10,
+        "damage": 30,
         "quality": "rare",
         "price": 0,
         "slot": "two_hand",

@@ -5,7 +5,7 @@
         "defense": 2,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 1,
+        "price": 40,
         "slot": "helmet",
         "allowed_classes": ["Warrior"]
     },
@@ -16,7 +16,7 @@
         "defense": 3,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 1,
+        "price": 60,
         "slot": "chest",
         "allowed_classes": ["Warrior"]
     },
@@ -27,7 +27,7 @@
         "defense": 2,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 40,
         "slot": "helmet",
         "allowed_classes": ["Assassin"]
     },
@@ -38,7 +38,7 @@
         "defense": 3,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 60,
         "slot": "chest",
         "allowed_classes": ["Assassin"]
     },
@@ -49,7 +49,7 @@
         "defense": 2,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 40,
         "slot": "helmet",
         "allowed_classes": ["Mage"]
     },
@@ -60,7 +60,7 @@
         "defense": 3,
         "magic_resistence": 1,
         "quality": "common",
-        "price": 0,
+        "price": 60,
         "slot": "chest",
         "allowed_classes": ["Mage"]
     }

@@ -54,7 +54,7 @@ def item_action(player):
         return
 
     while True:
-        if item["type"] in ["weapon", "armor", "accessory"]:
+        if item["type"] in ["weapon", "armor", "accessory", "helmet", "body_armor"]:
             print("1 - Equip")
             print("2 - Drop")
             print("3 - Back")
@@ -71,7 +71,7 @@ def item_action(player):
 
         action_choice = input("Select action: ")
 
-        if item["type"] in ["weapon", "armor", "accessory"]:
+        if item["type"] in ["weapon", "armor", "accessory", "helmet", "body_armor"]:
             if action_choice == "1":
                 equip_item(player, index, item)
             elif action_choice == "2":
@@ -113,7 +113,7 @@ def enemy_drop(player, enemy):
 
     roll = random.random()
     if roll < 0.33:
-        drop = enemy["drop"]
+        drop = enemy.get("drop")
         if isinstance(drop, dict):
             item_id = drop.get(player["class"])
         else:
@@ -132,7 +132,7 @@ def enemy_drop(player, enemy):
                 break
 
     gold_roll = random.random()
-    if gold_roll < 0.65:
+    if gold_roll < 0.80:
         gold = random.randint(enemy["gold_min"], enemy["gold_max"])
         player["gold"] += gold
         print(f"You found {gold} gold!")

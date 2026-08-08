@@ -4,7 +4,7 @@
         "type": "consumable",
         "effect": "heal",
         "value": 50,
-        "price": 1,
+        "price": 10,
         "quality": "common"
     },
 
